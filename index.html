@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Egy Quran</title>
 
-    <!-- إعدادات التطبيق (PWA) -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#c5a059">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -43,30 +42,18 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding-bottom: 160px; user-select: none; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding-bottom: 140px; user-select: none; }
         
-        /* --- تصميم شاشة البداية الثابتة --- */
+        /* --- شاشة البداية الثابتة --- */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
-        
         .splash-title { color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 30px; font-weight: 700; letter-spacing: 1px; }
-        
         .splash-row { display: flex; gap: 15px; justify-content: center; margin-bottom: 15px; width: 100%; }
-        
-        .splash-circle {
-            width: 70px; height: 70px;
-            border-radius: 50%; object-fit: cover;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
-            animation: fadeIn 0.8s ease both;
-        }
-
-        /* تدرج في ظهور الصور */
+        .splash-circle { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-gold); box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2); animation: fadeIn 0.8s ease both; }
         .splash-row:nth-child(2) .splash-circle:nth-child(1) { animation-delay: 0.1s; }
         .splash-row:nth-child(2) .splash-circle:nth-child(2) { animation-delay: 0.2s; }
         .splash-row:nth-child(3) .splash-circle:nth-child(1) { animation-delay: 0.3s; }
         .splash-row:nth-child(3) .splash-circle:nth-child(2) { animation-delay: 0.4s; }
         .splash-row:nth-child(3) .splash-circle:nth-child(3) { animation-delay: 0.5s; }
-
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         /* -------------------------------------------------- */
 
@@ -74,20 +61,10 @@
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
         .top-bar-group { display: flex; gap: 8px; align-items: center; }
-        .top-btn { 
-            background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted); 
-            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; cursor: pointer; transition: 0.2s; font-weight: 700; font-size: 0.75rem; 
-            text-decoration: none;
-        }
+        .top-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-weight: 700; font-size: 0.75rem; text-decoration: none; }
         .top-btn:hover { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); }
         .top-btn svg { width: 18px; height: 18px; }
-        
-        .email-btn:hover, .email-btn:active { 
-            color: #3b82f6 !important; 
-            border-color: #3b82f6 !important; 
-            background: rgba(59, 130, 246, 0.08) !important; 
-        }
+        .email-btn:hover, .email-btn:active { color: #3b82f6 !important; border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.08) !important; }
         
         header { text-align: center; padding-bottom: 20px; }
         .header-img { height: 85px; width: 85px; border-radius: 50%; border: 2px solid var(--accent-gold); box-shadow: 0 4px 20px var(--shadow-intensity); object-fit: cover; margin-bottom: 10px; }
@@ -99,11 +76,7 @@
         .sheikh-selector-wrapper { width: 100%; margin: 15px 0; }
         .sheikh-list { display: flex; gap: 12px; overflow-x: auto; padding: 5px 5px 15px 5px; scrollbar-width: none; }
         .sheikh-list::-webkit-scrollbar { display: none; }
-        .sheikh-item {
-            background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 16px;
-            padding: 10px; min-width: 95px; text-align: center; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 3px 8px var(--shadow-intensity);
-        }
+        .sheikh-item { background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 16px; padding: 10px; min-width: 95px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 3px 8px var(--shadow-intensity); }
         .sheikh-item.active { border-color: var(--accent-gold); background: var(--glass-active); transform: translateY(-2px); }
         .sheikh-avatar-container { position: relative; width: 50px; height: 50px; margin: 0 auto; }
         .sheikh-avatar-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
@@ -113,11 +86,7 @@
         @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }
         @keyframes equalize { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
         
-        .playing-badge {
-            position: absolute; bottom: -3px; right: -3px; width: 22px; height: 22px;
-            background: var(--accent-gold); border-radius: 50%; border: 2px solid var(--bg-mid);
-            display: flex; align-items: flex-end; justify-content: center; gap: 2px; padding-bottom: 5px;
-        }
+        .playing-badge { position: absolute; bottom: -3px; right: -3px; width: 22px; height: 22px; background: var(--accent-gold); border-radius: 50%; border: 2px solid var(--bg-mid); display: flex; align-items: flex-end; justify-content: center; gap: 2px; padding-bottom: 5px; }
         .playing-badge::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-gold); border-radius: 50%; z-index: -1; animation: pulse-ring 1.5s infinite; }
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
@@ -129,7 +98,6 @@
         .edition-dropdown-btn:hover { border-color: var(--accent-gold); box-shadow: 0 6px 16px rgba(197, 160, 89, 0.15); }
         .edition-dropdown-btn svg { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); width: 16px; height: 16px; flex-shrink: 0; }
         .edition-dropdown-btn.open svg { transform: rotate(180deg); color: var(--accent-gold); }
-        
         .edition-dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 8px; width: 170px; background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); overflow: hidden; max-height: 0; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; transform: translateY(-10px); }
         .edition-dropdown-menu.show { max-height: 300px; opacity: 1; pointer-events: auto; transform: translateY(0); }
         .edition-dropdown-item { padding: 12px 16px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: space-between; border-right: 3px solid transparent; }
@@ -137,23 +105,22 @@
         .edition-dropdown-item:hover { background: var(--glass-bg); color: var(--text-main); padding-right: 20px; }
         .edition-dropdown-item.active { background: var(--glass-active); color: var(--accent-gold); font-weight: 700; border-right-color: var(--accent-gold); }
         
-        /* قائمة السور */
-        .surah-list-container { display: flex; flex-direction: column; gap: 8px; }
-        .surah-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 14px; transition: 0.15s; }
+        /* قائمة السور (تصميم مدمج أصغر) */
+        .surah-list-container { display: flex; flex-direction: column; gap: 6px; }
+        .surah-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 12px; transition: 0.15s; }
         .surah-row.active-row { border-color: var(--accent-gold); background: var(--glass-active); }
-        .surah-info { display: flex; align-items: center; gap: 14px; }
-        .surah-number { font-size: 0.8rem; color: var(--accent-gold); font-weight: 700; min-width: 25px; }
-        .surah-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
-        .surah-actions { display: flex; align-items: center; gap: 10px; }
-        .surah-action-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-light); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .surah-info { display: flex; align-items: center; gap: 12px; }
+        .surah-number { font-size: 0.75rem; color: var(--accent-gold); font-weight: 700; min-width: 24px; }
+        .surah-name { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
+        .surah-actions { display: flex; align-items: center; gap: 8px; }
+        .surah-action-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-light); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
         .surah-action-btn:hover { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); }
-        .surah-action-btn svg { width: 16px !important; height: 16px !important; }
-        .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); }
+        .surah-action-btn svg { width: 14px !important; height: 14px !important; }
+        .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3); }
         .active-row .play-cell:hover { transform: scale(1.05); }
 
         .icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
         .icon-btn:hover { color: var(--accent-hover); }
-        /* تصميم الأزرار عند التفعيل (Loop و AutoPlay) */
         .icon-btn.active-feature { color: var(--accent-gold); }
 
         /* نافذة التحميل */
@@ -164,32 +131,26 @@
         .dl-progress-fill { height: 100%; width: 0%; background: var(--accent-gold); transition: width 0.1s linear; border-radius: 10px; }
         .dl-modal-pct { margin-top: 12px; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); }
 
-        /* المشغل السفلي المحدث */
-        .floating-player { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--glass-border); padding: 15px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s; }
-        
-        /* منع التمرير العشوائي عند اللمس على شريط التقدم */
-        .player-seekbar-container { width: 100%; height: 20px; display: flex; align-items: center; cursor: pointer; direction: ltr; margin-bottom: 8px; touch-action: none; }
-        
-        .player-seekbar-track { width: 100%; height: 5px; background: rgba(0,0,0,0.05); border-radius: 10px; position: relative; }
+        /* المشغل السفلي (أصغر وأنحف) */
+        .floating-player { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid var(--glass-border); padding: 10px 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s; }
+        .player-seekbar-container { width: 100%; height: 16px; display: flex; align-items: center; cursor: pointer; direction: ltr; margin-bottom: 6px; touch-action: none; }
+        .player-seekbar-track { width: 100%; height: 4px; background: rgba(0,0,0,0.05); border-radius: 10px; position: relative; }
         .player-seekbar-fill { height: 100%; background: var(--accent-gold); width: 0%; border-radius: 10px; position: relative; pointer-events: none; }
-        .player-seekbar-thumb { position: absolute; right: -7px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; background: #fff; border: 2px solid var(--accent-gold); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .play-toggle-btn { background: var(--accent-gold); color: #fff; border: none; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.4); transition: transform 0.2s; }
+        .player-seekbar-thumb { position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background: #fff; border: 2px solid var(--accent-gold); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .play-toggle-btn { background: var(--accent-gold); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(197, 160, 89, 0.4); transition: transform 0.2s; }
         .play-toggle-btn:active { transform: scale(0.92); }
-        .play-toggle-btn svg { width: 22px !important; height: 22px !important; }
+        .play-toggle-btn svg { width: 18px !important; height: 18px !important; }
+        .icon-btn svg { width: 20px; height: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- شاشة البداية بالترتيب الجديد (سطرين) -->
     <div id="splash-screen">
         <h1 class="splash-title">Egy Quran</h1>
-        
-        <!-- السطر الأول: الحصري والمنشاوي -->
         <div class="splash-row">
             <img src="hosary.jpg" class="splash-circle">
             <img src="minshawy.jpg" class="splash-circle">
         </div>
-        <!-- السطر الثاني: مصطفى والبنا وعبدالباسط -->
         <div class="splash-row">
             <img src="mustafa.jpg" class="splash-circle">
             <img src="banna.jpg" class="splash-circle">
@@ -198,7 +159,6 @@
     </div>
 
     <div class="container">
-        <!-- الشريط العلوي -->
         <div class="top-bar">
             <div class="top-bar-group">
                 <button class="top-btn" onclick="toggleTheme()" id="theme-toggle-btn"></button>
@@ -233,7 +193,6 @@
         </div>
     </div>
 
-    <!-- المشغل السفلي المحدث بأزرار التكرار والتشغيل التلقائي -->
     <div class="floating-player" id="global-player">
         <div class="player-seekbar-container" id="progress-container">
             <div class="player-seekbar-track">
@@ -242,31 +201,29 @@
                 </div>
             </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div id="player-track-title" style="font-size:0.85rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
-                <div style="font-size:0.68rem; color:var(--text-muted);"><span id="curr-time" dir="ltr">00:00</span> / <span id="total-time" dir="ltr">00:00</span></div>
+                <div id="player-track-title" style="font-size:0.8rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                <div style="font-size:0.65rem; color:var(--text-muted);"><span id="curr-time" dir="ltr">00:00</span> / <span id="total-time" dir="ltr">00:00</span></div>
             </div>
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
-                <!-- زر التكرار (Loop) -->
                 <button class="icon-btn" id="btn-loop" onclick="toggleLoop()" title="تكرار السورة الحالية">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
                 </button>
                 
-                <div style="display:flex; align-items:center; gap:18px;">
+                <div style="display:flex; align-items:center; gap:16px;">
                     <button class="icon-btn" onclick="playPrevious()" title="السابق">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                     </button>
                     <button class="play-toggle-btn" id="player-play-btn" onclick="togglePlayPause()"></button>
                     <button class="icon-btn" onclick="playNext()" title="التالي">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                     </button>
                 </div>
                 
-                <!-- زر التشغيل التلقائي للتالي (Auto Next) - مفعل افتراضياً -->
                 <button class="icon-btn active-feature" id="btn-autonext" onclick="toggleAutoNext()" title="التشغيل التلقائي للسورة التالية">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>
                 </button>
             </div>
         </div>
@@ -336,9 +293,8 @@
         let dropdownOpen = false;
         let savedReciterEditions = {}; 
 
-        // المتغيرات الخاصة بخصائص المشغل الجديدة
         let isLooping = false;
-        let isAutoNext = true; // مفعل افتراضياً
+        let isAutoNext = true; 
 
         function getSurahName(id, nameAr) { return currentLang === 'ar' ? nameAr : surahNamesEn[id]; }
 
@@ -360,7 +316,6 @@
             document.getElementById('theme-toggle-btn').innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
         }
 
-        // أزرار التحكم الجديدة
         function toggleLoop() {
             isLooping = !isLooping;
             audioInstance.loop = isLooping;
@@ -513,7 +468,7 @@
             if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
             playingSurahId = id; playingSheikhId = currentSheikhId; playingEditionId = currentEdition;
             audioInstance.src = url; 
-            audioInstance.loop = isLooping; // التأكد من حالة التكرار
+            audioInstance.loop = isLooping; 
             audioInstance.play();
             
             localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: playingSheikhId, edition: playingEditionId, surah: playingSurahId }));
@@ -539,7 +494,6 @@
         audioInstance.addEventListener('play', () => { isBuffering = false; syncUIWithAudioState(); });
         audioInstance.addEventListener('pause', () => syncUIWithAudioState());
         
-        // التشغيل التلقائي للسورة التالية
         audioInstance.onended = () => {
             if (!isLooping && isAutoNext) {
                 playNext();
@@ -556,7 +510,6 @@
 
         function formatTime(s) { if(isNaN(s)) return "00:00"; const m = Math.floor(s/60), sec = Math.floor(s%60); return `${m}:${sec < 10 ? '0'+sec : sec}`; }
 
-        // --- إصلاح وتثبيت شريط التمرير على الهاتف ---
         let isDragging = false; 
         let currentSeekPct = 0;
         const progressContainer = document.getElementById('progress-container');
