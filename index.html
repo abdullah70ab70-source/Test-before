@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Egy Quran">
-    <link rel="apple-touch-icon" href="hosary.jpg">
+    <link rel="apple-touch-icon" href="icon.png">
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6JJ4WGLT89"></script>
     <script>
@@ -118,19 +118,51 @@
         .dl-progress-fill { height: 100%; width: 0%; background: var(--accent-gold); transition: width 0.1s linear; border-radius: 10px; }
         .dl-modal-pct { margin-top: 12px; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); }
 
-        /* المشغل السفلي */
-        .floating-player { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid var(--glass-border); padding: 10px 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s; }
-        .player-seekbar-container { width: 100%; height: 16px; display: flex; align-items: center; cursor: pointer; direction: ltr; margin-bottom: 6px; touch-action: none; }
+        /* المشغل السفلي - تم تصغيره هنا */
+        .floating-player { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid var(--glass-border); padding: 6px 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s; }
+        .player-seekbar-container { width: 100%; height: 12px; display: flex; align-items: center; cursor: pointer; direction: ltr; margin-bottom: 2px; touch-action: none; }
         .player-seekbar-track { width: 100%; height: 4px; background: rgba(0,0,0,0.05); border-radius: 10px; position: relative; }
         .player-seekbar-fill { height: 100%; background: var(--accent-gold); width: 0%; border-radius: 10px; position: relative; pointer-events: none; }
         .player-seekbar-thumb { position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background: #fff; border: 2px solid var(--accent-gold); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .play-toggle-btn { background: var(--accent-gold); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(197, 160, 89, 0.4); transition: transform 0.2s; }
+        .play-toggle-btn { background: var(--accent-gold); color: #fff; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(197, 160, 89, 0.4); transition: transform 0.2s; }
         .play-toggle-btn:active { transform: scale(0.92); }
-        .play-toggle-btn svg { width: 18px !important; height: 18px !important; }
+        .play-toggle-btn svg { width: 16px !important; height: 16px !important; }
         .icon-btn svg { width: 20px; height: 20px; }
+
+        /* --- إضافات التوست و سبلاش --- */
+        @keyframes splash-pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(0.9); } }
+        
+        .splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
+            display: flex; align-items: center; justify-content: center;
+            z-index: 99999; transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .splash-screen img {
+            width: 120px; height: 120px; border-radius: 25px;
+            animation: splash-pulse 1.5s infinite; object-fit: contain;
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.15);
+        }
+
+        .toast {
+            position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: var(--text-main); color: var(--bg-mid);
+            padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+            opacity: 0; pointer-events: none; transition: all 0.3s ease;
+            z-index: 10000; text-align: center; white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
+
+    <!-- الشاشة الافتتاحية -->
+    <div id="splash-screen" class="splash-screen">
+        <img src="icon.png" alt="Egy Quran">
+    </div>
+
+    <!-- رسالة التوست -->
+    <div id="toast" class="toast"></div>
 
     <div class="container">
         <div class="top-bar">
@@ -204,6 +236,27 @@
     </div>
 
     <script>
+        // إزالة Splash Screen
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    splash.style.visibility = 'hidden';
+                }, 1000);
+            }
+        });
+
+        // دوال التوست
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
         const surahNamesEn = [
             "", "Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Taha",
             "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir",
@@ -294,15 +347,25 @@
             isLooping = !isLooping;
             audioInstance.loop = isLooping;
             const btn = document.getElementById('btn-loop');
-            if(isLooping) btn.classList.add('active-feature');
-            else btn.classList.remove('active-feature');
+            if(isLooping) {
+                btn.classList.add('active-feature');
+                showToast(currentLang === 'ar' ? 'تم تفعيل التكرار' : 'Loop Enabled');
+            } else {
+                btn.classList.remove('active-feature');
+                showToast(currentLang === 'ar' ? 'تم إيقاف التكرار' : 'Loop Disabled');
+            }
         }
 
         function toggleAutoNext() {
             isAutoNext = !isAutoNext;
             const btn = document.getElementById('btn-autonext');
-            if(isAutoNext) btn.classList.add('active-feature');
-            else btn.classList.remove('active-feature');
+            if(isAutoNext) {
+                btn.classList.add('active-feature');
+                showToast(currentLang === 'ar' ? 'تم تفعيل التشغيل التلقائي' : 'Auto-Next Enabled');
+            } else {
+                btn.classList.remove('active-feature');
+                showToast(currentLang === 'ar' ? 'تم إيقاف التشغيل التلقائي' : 'Auto-Next Disabled');
+            }
         }
 
         function syncUIWithAudioState() {
