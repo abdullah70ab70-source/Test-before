@@ -127,16 +127,16 @@
         .play-toggle-btn svg { width: 16px !important; height: 16px !important; }
         .icon-btn svg { width: 20px; height: 20px; }
 
-        /* قائمة التحكم في التشغيل */
+        /* قائمة التحكم في التشغيل - معدلة لتصبح أصغر */
         .playback-menu {
-            position: absolute; bottom: 100%; right: 0; margin-bottom: 12px; width: 140px;
-            background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 12px;
+            position: absolute; bottom: 100%; right: 0; margin-bottom: 10px; width: 120px;
+            background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 10px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.15); overflow: hidden;
             max-height: 0; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; transform: translateY(10px);
             z-index: 1010;
         }
         .playback-menu.show { max-height: 200px; opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .playback-menu-item { padding: 12px 14px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); cursor: pointer; text-align: right; transition: 0.2s; border-bottom: 1px solid var(--glass-border); }
+        .playback-menu-item { padding: 8px 12px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); cursor: pointer; text-align: right; transition: 0.2s; border-bottom: 1px solid var(--glass-border); }
         .playback-menu-item:last-child { border-bottom: none; }
         .playback-menu-item:hover { background: var(--glass-bg); color: var(--text-main); }
         .playback-menu-item.active { background: var(--glass-active); color: var(--accent-gold); }
@@ -153,6 +153,7 @@
 </head>
 <body>
 
+    <!-- رسالة التوست -->
     <div id="toast" class="toast"></div>
 
     <div class="container">
@@ -206,7 +207,9 @@
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
                 
-                <div style="width: 70px;"></div> <div style="display:flex; align-items:center; gap:16px;">
+                <div style="width: 70px;"></div> <!-- Placeholder للحفاظ على التوسيط -->
+                
+                <div style="display:flex; align-items:center; gap:16px;">
                     <button class="icon-btn" onclick="playPrevious()" title="السابق">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                     </button>
@@ -399,6 +402,18 @@
                     if (!badge) item.querySelector('.sheikh-avatar-container').insertAdjacentHTML('beforeend', `<div class="playing-badge"><div class="equalizer-bar" style="animation: equalize 0.8s infinite alternate"></div><div class="equalizer-bar" style="animation: equalize 0.5s infinite alternate; animation-delay:0.1s"></div><div class="equalizer-bar" style="animation: equalize 0.7s infinite alternate; animation-delay:0.2s"></div></div>`);
                 } else if (badge) badge.remove();
             });
+
+            // تحديث الدائرة النشطة لضمان ظهورها فقط مع القارئ والختمة التي تعمل حالياً
+            document.querySelectorAll('.edition-pill').forEach(pill => {
+                const pillKey = pill.getAttribute('data-key');
+                const isPlayingThisEdition = (currentSheikhId === playingSheikhId && pillKey == playingEditionId && isPlaying);
+                let dot = pill.querySelector('.active-dot');
+                if (isPlayingThisEdition) {
+                    if (!dot) pill.insertAdjacentHTML('beforeend', `<span class="active-dot"></span>`);
+                } else {
+                    if (dot) dot.remove();
+                }
+            });
         }
 
         async function loadEditionData(sheikhId, editionNum) {
@@ -491,9 +506,9 @@
 
         function renderEditionDropdown() {
             const configs = editionsConfig[currentSheikhId]; const keys = Object.keys(configs);
-            const dotHTML = `<span class="active-dot"></span>`;
-            const pills = keys.map(key => `<div class="edition-pill ${currentEdition == key ? 'active' : ''}" onclick="selectEditionDropdown(${key}, event)">${currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn} ${currentEdition == key ? dotHTML : ''}</div>`).join('');
+            const pills = keys.map(key => `<div class="edition-pill ${currentEdition == key ? 'active' : ''}" data-key="${key}" onclick="selectEditionDropdown(${key}, event)">${currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn}</div>`).join('');
             document.getElementById('edition-dropdown-wrapper').innerHTML = `<div class="edition-list-wrapper"><div class="edition-list">${pills}</div></div>`;
+            syncUIWithAudioState(); // تحديث الدائرة فور بناء القائمة
         }
 
         async function selectEditionDropdown(num, event) {
