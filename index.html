@@ -44,19 +44,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding-bottom: 140px; user-select: none; }
         
-        /* --- شاشة البداية الثابتة --- */
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
-        .splash-title { color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 30px; font-weight: 700; letter-spacing: 1px; }
-        .splash-row { display: flex; gap: 15px; justify-content: center; margin-bottom: 15px; width: 100%; }
-        .splash-circle { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-gold); box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2); animation: fadeIn 0.8s ease both; }
-        .splash-row:nth-child(2) .splash-circle:nth-child(1) { animation-delay: 0.1s; }
-        .splash-row:nth-child(2) .splash-circle:nth-child(2) { animation-delay: 0.2s; }
-        .splash-row:nth-child(3) .splash-circle:nth-child(1) { animation-delay: 0.3s; }
-        .splash-row:nth-child(3) .splash-circle:nth-child(2) { animation-delay: 0.4s; }
-        .splash-row:nth-child(3) .splash-circle:nth-child(3) { animation-delay: 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        /* -------------------------------------------------- */
-
         .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 16px; }
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
@@ -105,7 +92,7 @@
         .edition-dropdown-item:hover { background: var(--glass-bg); color: var(--text-main); padding-right: 20px; }
         .edition-dropdown-item.active { background: var(--glass-active); color: var(--accent-gold); font-weight: 700; border-right-color: var(--accent-gold); }
         
-        /* قائمة السور (تصميم مدمج أصغر) */
+        /* قائمة السور */
         .surah-list-container { display: flex; flex-direction: column; gap: 6px; }
         .surah-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 12px; transition: 0.15s; }
         .surah-row.active-row { border-color: var(--accent-gold); background: var(--glass-active); }
@@ -131,7 +118,7 @@
         .dl-progress-fill { height: 100%; width: 0%; background: var(--accent-gold); transition: width 0.1s linear; border-radius: 10px; }
         .dl-modal-pct { margin-top: 12px; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); }
 
-        /* المشغل السفلي (أصغر وأنحف) */
+        /* المشغل السفلي */
         .floating-player { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid var(--glass-border); padding: 10px 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s; }
         .player-seekbar-container { width: 100%; height: 16px; display: flex; align-items: center; cursor: pointer; direction: ltr; margin-bottom: 6px; touch-action: none; }
         .player-seekbar-track { width: 100%; height: 4px; background: rgba(0,0,0,0.05); border-radius: 10px; position: relative; }
@@ -144,19 +131,6 @@
     </style>
 </head>
 <body>
-
-    <div id="splash-screen">
-        <h1 class="splash-title">Egy Quran</h1>
-        <div class="splash-row">
-            <img src="hosary.jpg" class="splash-circle">
-            <img src="minshawy.jpg" class="splash-circle">
-        </div>
-        <div class="splash-row">
-            <img src="mustafa.jpg" class="splash-circle">
-            <img src="banna.jpg" class="splash-circle">
-            <img src="basit.jpg" class="splash-circle">
-        </div>
-    </div>
 
     <div class="container">
         <div class="top-bar">
@@ -539,10 +513,6 @@
         window.addEventListener('touchend', (e) => { if (isDragging) { isDragging = false; if (e.changedTouches) seek(e); if(audioInstance.duration) audioInstance.currentTime = currentSeekPct * audioInstance.duration; } }); 
         
         progressContainer.addEventListener('click', (e) => { if(audioInstance.duration) audioInstance.currentTime = seek(e) * audioInstance.duration; });
-
-        window.addEventListener('load', () => { 
-            setTimeout(() => { const splash = document.getElementById('splash-screen'); splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500); }, 1500); 
-        });
 
         if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed')); }); }
 
