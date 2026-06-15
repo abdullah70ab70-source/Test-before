@@ -79,20 +79,21 @@
         .playing-badge::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-gold); border-radius: 50%; z-index: -1; animation: pulse-ring 1.5s infinite; }
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
-        /* --- القائمة المنسدلة للختمات (محاذاة لليمين، تصميم احترافي ومبتكر) --- */
+        /* --- القائمة المنسدلة للختمات (تحديث: عرض ثابت ومتطابق لجميع المشايخ) --- */
         .edition-dropdown-wrapper { 
             position: relative; margin: 5px 5px 20px 5px; z-index: 10; 
             display: flex; justify-content: flex-start; 
         }
         .edition-dropdown-btn { 
+            width: 170px; /* عرض ثابت لجميع الأزرار */
             background: var(--bg-mid); 
             border: 1px solid var(--glass-border); 
             color: var(--text-main); 
-            padding: 8px 16px 8px 12px; 
+            padding: 8px 12px; 
             border-radius: 12px; 
             font-size: 0.8rem; 
             font-weight: 700; 
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center;
             cursor: pointer; transition: all 0.3s ease;
             box-shadow: 0 4px 12px var(--shadow-intensity);
             font-family: inherit;
@@ -100,13 +101,22 @@
         .edition-dropdown-btn::before {
             content: ''; width: 4px; height: 16px; 
             background: var(--accent-gold); border-radius: 4px;
+            margin-left: 10px; /* مسافة ثابتة بين الشريط الذهبي والنص */
+        }
+        .edition-dropdown-btn span {
+            flex: 1; /* يجعل النص يشغل المساحة المتبقية ليدفع السهم دائماً لأقصى اليسار */
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .edition-dropdown-btn:hover { border-color: var(--accent-gold); box-shadow: 0 6px 16px rgba(197, 160, 89, 0.15); }
         .edition-dropdown-btn:active { transform: translateY(2px); }
         
         .edition-dropdown-btn svg { 
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            color: var(--text-muted); width: 16px; height: 16px; margin-right: 4px;
+            color: var(--text-muted); width: 16px; height: 16px; 
+            flex-shrink: 0;
         }
         .edition-dropdown-btn.open svg { transform: rotate(180deg); color: var(--accent-gold); }
         
@@ -114,7 +124,7 @@
             position: absolute; top: 100%; 
             right: 0; 
             margin-top: 8px; 
-            min-width: 190px; 
+            width: 170px; /* نفس عرض الزر تماماً ليكون متناسقاً */
             background: var(--bg-mid); border: 1px solid var(--glass-border); 
             border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); 
             overflow: hidden; max-height: 0; opacity: 0; 
@@ -220,6 +230,7 @@
 
         <div class="sheikh-selector-wrapper"><div class="sheikh-list" id="sheikh-carousel"></div></div>
         
+        <!-- القائمة المنسدلة للختمات -->
         <div class="edition-dropdown-wrapper" id="edition-dropdown-wrapper"></div>
         
         <div class="surah-list-container" id="main-surah-list"></div>
@@ -273,7 +284,7 @@
         };
         let currentLang = 'ar';
 
-        // --- تحديث مسارات الصور لتتوافق مع المرفوعة على GitHub مباشرة ---
+        // --- مسارات الصور تتوافق مع المرفوعة على GitHub مباشرة ---
         const recitersList = [
             { id: "husary", nameAr: "محمود خليل الحصري", nameEn: "Mahmoud Khalil Al-Husary", image: "hosary.jpg" },
             { id: "minshawi", nameAr: "محمد صديق المنشاوي", nameEn: "Muhammad Siddiq Minshawi", image: "minshawy.jpg" },
