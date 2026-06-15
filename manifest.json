@@ -1,21 +1,22 @@
 {
-  "name": "مصحف كبار القراء",
-  "short_name": "المصحف",
-  "description": "تطبيق للاستماع وتحميل القرآن الكريم بصوت كبار القراء بمختلف الروايات",
+  "name": "Egy Quran",
+  "short_name": "Egy Quran",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f8faf9",
   "theme_color": "#c5a059",
   "icons": [
     {
-      "src": "hosary.jpg",
+      "src": "icon.png",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "hosary.jpg",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
