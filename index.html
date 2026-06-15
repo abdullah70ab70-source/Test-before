@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مصحف كبار القراء</title>
+    <title>Egy Quran</title>
 
     <!-- إعدادات التطبيق (PWA) -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#c5a059">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="مصحف القراء">
-    <link rel="apple-touch-icon" href="hosary.jpg"> <!-- استخدمنا صورة الحصري كأيقونة مؤقتة للتطبيق -->
+    <meta name="apple-mobile-web-app-title" content="Egy Quran">
+    <link rel="apple-touch-icon" href="hosary.jpg">
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6JJ4WGLT89"></script>
     <script>
@@ -42,21 +42,47 @@
             --shadow-intensity: rgba(0, 0, 0, 0.5);
         }
 
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .loading-spin { animation: spin 1s linear infinite; will-change: transform; display: block; }
-        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }
-        @keyframes equalize { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
-
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding-bottom: 150px; user-select: none; }
         
-        .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 8px 16px; }
+        /* --- تصميم شاشة البداية (Splash Screen) بالصور الدوارة --- */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        
+        .splash-title { color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
+        .splash-subtitle { color: var(--text-muted); font-size: 1.1rem; font-weight: 700; margin-bottom: 40px; letter-spacing: 0.5px; }
+        
+        /* جعل الحاوية بالكامل تدور */
+        .splash-images-container { position: relative; width: 200px; height: 200px; margin-bottom: 20px; animation: spin-ring 6s linear infinite; }
+        @keyframes spin-ring { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        /* دوائر القراء */
+        .splash-circle { 
+            position: absolute; top: 50%; left: 50%; 
+            width: 56px; height: 56px; 
+            margin: -28px 0 0 -28px;
+            border-radius: 50%; object-fit: cover; 
+            border: 2px solid var(--accent-gold); 
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2); 
+            animation: fadeIn 0.8s ease both;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* توزيع الصور في دائرة (زوايا متساوية) وتثبيت اتجاه الوجوه أثناء الدوران */
+        .pos-1 { transform: rotate(0deg) translate(80px) rotate(0deg); animation-delay: 0.1s; }
+        .pos-2 { transform: rotate(72deg) translate(80px) rotate(-72deg); animation-delay: 0.2s; }
+        .pos-3 { transform: rotate(144deg) translate(80px) rotate(-144deg); animation-delay: 0.3s; }
+        .pos-4 { transform: rotate(216deg) translate(80px) rotate(-216deg); animation-delay: 0.4s; }
+        .pos-5 { transform: rotate(288deg) translate(80px) rotate(-288deg); animation-delay: 0.5s; }
+        /* -------------------------------------------------- */
 
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 8px; }
+        .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 16px; }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
         .top-bar-group { display: flex; gap: 8px; align-items: center; }
         .top-btn { 
             background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted); 
-            width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; 
+            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; 
             justify-content: center; cursor: pointer; transition: 0.2s; font-weight: 700; font-size: 0.75rem; 
             text-decoration: none;
         }
@@ -69,12 +95,13 @@
             background: rgba(59, 130, 246, 0.08) !important; 
         }
         
-        header { text-align: center; padding: 10px 0; }
+        header { text-align: center; padding-bottom: 20px; }
         .header-img { height: 85px; width: 85px; border-radius: 50%; border: 2px solid var(--accent-gold); box-shadow: 0 4px 20px var(--shadow-intensity); object-fit: cover; margin-bottom: 10px; }
         header h1 { font-size: 1.25rem; font-weight: 300; }
         header h1 strong { font-weight: 700; color: var(--accent-gold); }
         header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
+        /* القراء */
         .sheikh-selector-wrapper { width: 100%; margin: 15px 0; }
         .sheikh-list { display: flex; gap: 12px; overflow-x: auto; padding: 5px 5px 15px 5px; scrollbar-width: none; }
         .sheikh-list::-webkit-scrollbar { display: none; }
@@ -87,6 +114,11 @@
         .sheikh-avatar-container { position: relative; width: 50px; height: 50px; margin: 0 auto; }
         .sheikh-avatar-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
         
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .loading-spin { animation: spin 1s linear infinite; will-change: transform; display: block; }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }
+        @keyframes equalize { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+        
         .playing-badge {
             position: absolute; bottom: -3px; right: -3px; width: 22px; height: 22px;
             background: var(--accent-gold); border-radius: 50%; border: 2px solid var(--bg-mid);
@@ -95,139 +127,76 @@
         .playing-badge::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-gold); border-radius: 50%; z-index: -1; animation: pulse-ring 1.5s infinite; }
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
-        .edition-dropdown-wrapper { 
-            position: relative; margin: 5px 5px 20px 5px; z-index: 10; 
-            display: flex; justify-content: flex-start; 
-        }
-        .edition-dropdown-btn { 
-            width: 170px; 
-            background: var(--bg-mid); 
-            border: 1px solid var(--glass-border); 
-            color: var(--text-main); 
-            padding: 8px 12px; 
-            border-radius: 12px; 
-            font-size: 0.8rem; 
-            font-weight: 700; 
-            display: flex; align-items: center;
-            cursor: pointer; transition: all 0.3s ease;
-            box-shadow: 0 4px 12px var(--shadow-intensity);
-            font-family: inherit;
-        }
-        .edition-dropdown-btn::before {
-            content: ''; width: 4px; height: 16px; 
-            background: var(--accent-gold); border-radius: 4px;
-            margin-left: 10px; 
-        }
-        .edition-dropdown-btn span {
-            flex: 1; 
-            text-align: right;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        /* القائمة المنسدلة للختمات */
+        .edition-dropdown-wrapper { position: relative; margin: 5px 5px 20px 5px; display: flex; justify-content: flex-start; z-index: 10;}
+        .edition-dropdown-btn { width: 170px; background: var(--bg-mid); border: 1px solid var(--glass-border); color: var(--text-main); padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-intensity); font-family: inherit; }
+        .edition-dropdown-btn::before { content: ''; width: 4px; height: 16px; background: var(--accent-gold); border-radius: 4px; margin-left: 10px; }
+        .edition-dropdown-btn span { flex: 1; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .edition-dropdown-btn:hover { border-color: var(--accent-gold); box-shadow: 0 6px 16px rgba(197, 160, 89, 0.15); }
-        .edition-dropdown-btn:active { transform: translateY(2px); }
-        
-        .edition-dropdown-btn svg { 
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            color: var(--text-muted); width: 16px; height: 16px; 
-            flex-shrink: 0;
-        }
+        .edition-dropdown-btn svg { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); width: 16px; height: 16px; flex-shrink: 0; }
         .edition-dropdown-btn.open svg { transform: rotate(180deg); color: var(--accent-gold); }
         
-        .edition-dropdown-menu { 
-            position: absolute; top: 100%; 
-            right: 0; 
-            margin-top: 8px; 
-            width: 170px; 
-            background: var(--bg-mid); border: 1px solid var(--glass-border); 
-            border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); 
-            overflow: hidden; max-height: 0; opacity: 0; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
-            transform: translateY(-10px);
-        }
+        .edition-dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 8px; width: 170px; background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); overflow: hidden; max-height: 0; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; transform: translateY(-10px); }
         .edition-dropdown-menu.show { max-height: 300px; opacity: 1; pointer-events: auto; transform: translateY(0); }
-        
-        .edition-dropdown-item { 
-            padding: 12px 16px; 
-            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); 
-            cursor: pointer; transition: all 0.25s ease; 
-            display: flex; align-items: center; justify-content: space-between;
-            border-right: 3px solid transparent;
-        }
+        .edition-dropdown-item { padding: 12px 16px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: space-between; border-right: 3px solid transparent; }
         .edition-dropdown-item:not(:last-child) { border-bottom: 1px solid var(--glass-border); }
         .edition-dropdown-item:hover { background: var(--glass-bg); color: var(--text-main); padding-right: 20px; }
         .edition-dropdown-item.active { background: var(--glass-active); color: var(--accent-gold); font-weight: 700; border-right-color: var(--accent-gold); }
         
+        /* قائمة السور */
         .surah-list-container { display: flex; flex-direction: column; gap: 8px; }
-        .surah-row {
-            display: flex; align-items: center; justify-content: space-between; padding: 14px 16px;
-            background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 14px; transition: 0.15s;
-        }
+        .surah-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 14px; transition: 0.15s; }
         .surah-row.active-row { border-color: var(--accent-gold); background: var(--glass-active); }
         .surah-info { display: flex; align-items: center; gap: 14px; }
         .surah-number { font-size: 0.8rem; color: var(--accent-gold); font-weight: 700; min-width: 25px; }
         .surah-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
-        
         .surah-actions { display: flex; align-items: center; gap: 10px; }
-        .surah-action-btn { 
-            width: 36px; height: 36px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            background: var(--bg-light); border: 1px solid var(--glass-border); 
-            color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s;
-        }
+        .surah-action-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-light); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
         .surah-action-btn:hover { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); }
         .surah-action-btn svg { width: 16px !important; height: 16px !important; }
-        
         .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); }
-        .active-row .play-cell:hover { color: #fff; transform: scale(1.05); }
+        .active-row .play-cell:hover { transform: scale(1.05); }
 
         .icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
         .icon-btn:hover { color: var(--accent-gold); }
 
-        .download-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
-            z-index: 9999; display: none; align-items: center; justify-content: center;
-        }
-        .download-modal-content {
-            background: var(--bg-mid); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 25px; width: 85%; max-width: 320px;
-            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
+        /* نافذة التحميل */
+        .download-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .download-modal-content { background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .dl-modal-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; color: var(--text-main); }
         .dl-progress-track { width: 100%; height: 8px; background: var(--glass-border); border-radius: 10px; overflow: hidden; position: relative; }
         .dl-progress-fill { height: 100%; width: 0%; background: var(--accent-gold); transition: width 0.1s linear; border-radius: 10px; }
         .dl-modal-pct { margin-top: 12px; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); }
 
-        .floating-player {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px);
-            border-radius: 20px; border: 1px solid var(--glass-border); padding: 12px 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s;
-        }
+        /* المشغل السفلي */
+        .floating-player { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 440px; background: var(--player-bg); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--glass-border); padding: 12px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; z-index: 1000; transition: background 0.2s; }
         .player-seekbar-container { width: 100%; height: 20px; display: flex; align-items: center; cursor: pointer; direction: ltr; margin-bottom: 8px; }
         .player-seekbar-track { width: 100%; height: 5px; background: rgba(0,0,0,0.05); border-radius: 10px; position: relative; }
         .player-seekbar-fill { height: 100%; background: var(--accent-gold); width: 0%; border-radius: 10px; position: relative; pointer-events: none; }
-        .player-seekbar-thumb { 
-            position: absolute; right: -7px; top: 50%; transform: translateY(-50%); 
-            width: 14px; height: 14px; background: #fff; border: 2px solid var(--accent-gold); 
-            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .play-toggle-btn { 
-            background: var(--accent-gold); color: #fff; border: none; 
-            width: 46px; height: 46px; border-radius: 50%; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.4); transition: transform 0.2s;
-        }
+        .player-seekbar-thumb { position: absolute; right: -7px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; background: #fff; border: 2px solid var(--accent-gold); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .play-toggle-btn { background: var(--accent-gold); color: #fff; border: none; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.4); transition: transform 0.2s; }
         .play-toggle-btn:active { transform: scale(0.92); }
         .play-toggle-btn svg { width: 22px !important; height: 22px !important; }
     </style>
 </head>
 <body>
 
+    <!-- شاشة البداية بالصور الدوارة وبدون دائرة تحميل -->
+    <div id="splash-screen">
+        <h1 class="splash-title">Egy Quran</h1>
+        <p class="splash-subtitle">الخمسة الكبار</p>
+        
+        <div class="splash-images-container">
+            <img src="hosary.jpg" class="splash-circle pos-1">
+            <img src="minshawy.jpg" class="splash-circle pos-2">
+            <img src="mustafa.jpg" class="splash-circle pos-3">
+            <img src="banna.jpg" class="splash-circle pos-4">
+            <img src="basit.jpg" class="splash-circle pos-5">
+        </div>
+    </div>
+
     <div class="container">
+        <!-- الشريط العلوي مع الأيقونات بحجم ومكان مثاليين -->
         <div class="top-bar">
             <div class="top-bar-group">
                 <button class="top-btn" onclick="toggleTheme()" id="theme-toggle-btn"></button>
@@ -248,9 +217,7 @@
         </header>
 
         <div class="sheikh-selector-wrapper"><div class="sheikh-list" id="sheikh-carousel"></div></div>
-        
         <div class="edition-dropdown-wrapper" id="edition-dropdown-wrapper"></div>
-        
         <div class="surah-list-container" id="main-surah-list"></div>
     </div>
 
@@ -349,26 +316,18 @@
         let dropdownOpen = false;
         let savedReciterEditions = {}; 
 
-        function getSurahName(id, nameAr) {
-            return currentLang === 'ar' ? nameAr : surahNamesEn[id];
-        }
+        function getSurahName(id, nameAr) { return currentLang === 'ar' ? nameAr : surahNamesEn[id]; }
 
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.documentElement.lang = currentLang;
             document.getElementById('lang-label').innerText = translations[currentLang].langLabel;
-            
             document.getElementById('player-controls').style.flexDirection = currentLang === 'ar' ? 'row-reverse' : 'row';
-
             selectSheikh(currentSheikhId);
-            
             if (playingSurahId) {
                 const sData = activeSurahsData.find(s => s.id === playingSurahId);
-                if(sData) {
-                    const sName = getSurahName(sData.id, sData.name);
-                    document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
-                }
+                if(sData) document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${getSurahName(sData.id, sData.name)}`;
             }
         }
 
@@ -387,14 +346,8 @@
                 const sId = parseInt(row.getAttribute('data-id'));
                 const playBtn = row.querySelector('.play-cell');
                 const isCurrentActive = (sId === playingSurahId && currentSheikhId === playingSheikhId && currentEdition === playingEditionId);
-
-                if (isCurrentActive) {
-                    row.classList.add('active-row');
-                    playBtn.innerHTML = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play);
-                } else {
-                    row.classList.remove('active-row');
-                    playBtn.innerHTML = icons.play;
-                }
+                if (isCurrentActive) { row.classList.add('active-row'); playBtn.innerHTML = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play); } 
+                else { row.classList.remove('active-row'); playBtn.innerHTML = icons.play; }
             });
 
             document.querySelectorAll('.sheikh-item').forEach(item => {
@@ -409,7 +362,6 @@
         async function loadEditionData(sheikhId, editionNum) {
             const config = editionsConfig[sheikhId][editionNum];
             if (!config) return; 
-            
             const cacheKey = `cache_${config.file}`;
             const cached = localStorage.getItem(cacheKey);
             if (cached) { activeSurahsData = JSON.parse(cached); renderSurahsList(); }
@@ -425,139 +377,71 @@
         function renderSheikhCarousel() {
             document.getElementById('sheikh-carousel').innerHTML = recitersList.map(s => {
                 const nameToShow = currentLang === 'ar' ? s.nameAr : s.nameEn;
-                return `
-                <div class="sheikh-item ${s.id === currentSheikhId ? 'active' : ''}" data-id="${s.id}" onclick="selectSheikh('${s.id}')">
-                    <div class="sheikh-avatar-container"><img src="${s.image}" class="sheikh-avatar-img" onerror="this.src='https://via.placeholder.com/50?text=Q'"></div>
-                    <div style="font-size:0.65rem; font-weight:700; margin-top:6px;">${nameToShow}</div>
-                </div>`;
+                return `<div class="sheikh-item ${s.id === currentSheikhId ? 'active' : ''}" data-id="${s.id}" onclick="selectSheikh('${s.id}')">
+                            <div class="sheikh-avatar-container"><img src="${s.image}" class="sheikh-avatar-img"></div>
+                            <div style="font-size:0.65rem; font-weight:700; margin-top:6px;">${nameToShow}</div>
+                        </div>`;
             }).join('');
             syncUIWithAudioState();
         }
 
         function renderSurahsList() {
             document.getElementById('main-surah-list').innerHTML = activeSurahsData.map(s => {
-                const sName = getSurahName(s.id, s.name);
-                return `
-                <div class="surah-row" data-id="${s.id}">
-                    <div class="surah-info">
-                        <span class="surah-number">${String(s.id).padStart(3, '0')}</span>
-                        <span class="surah-name">${translations[currentLang].surahPrefix} ${sName}</span>
-                    </div>
-                    <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
-                        <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
-                        <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}')" title="تحميل">
-                            ${icons.download}
-                        </button>
-                    </div>
-                </div>`;
+                return `<div class="surah-row" data-id="${s.id}">
+                            <div class="surah-info"><span class="surah-number">${String(s.id).padStart(3, '0')}</span><span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(s.id, s.name)}</span></div>
+                            <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
+                                <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
+                                <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}')" title="تحميل">${icons.download}</button>
+                            </div>
+                        </div>`;
             }).join('');
             syncUIWithAudioState();
         }
 
-        const dlModal = document.getElementById('download-modal');
-        const dlFill = document.getElementById('dl-progress-fill');
-        const dlPct = document.getElementById('dl-modal-pct');
-        const dlTitle = document.getElementById('dl-modal-title');
-
+        const dlModal = document.getElementById('download-modal'), dlFill = document.getElementById('dl-progress-fill'), dlPct = document.getElementById('dl-modal-pct'), dlTitle = document.getElementById('dl-modal-title');
         async function startDownload(id, url) {
-            if (activeDownloads[id]) return;
-            activeDownloads[id] = true;
-            
-            const sData = activeSurahsData.find(s => s.id === id);
-            const sName = getSurahName(id, sData.name);
-
-            dlModal.style.display = 'flex';
-            dlFill.style.width = '0%';
-            dlPct.innerText = '0%';
-            dlTitle.innerText = `${translations[currentLang].downloading} ${sName}...`;
-
+            if (activeDownloads[id]) return; activeDownloads[id] = true;
+            const sData = activeSurahsData.find(s => s.id === id); const sName = getSurahName(id, sData.name);
+            dlModal.style.display = 'flex'; dlFill.style.width = '0%'; dlPct.innerText = '0%'; dlTitle.innerText = `${translations[currentLang].downloading} ${sName}...`;
             try {
                 const response = await fetch(url, { mode: 'cors' });
-                if (!response.ok) throw new Error("CORS/Network Error");
-                
+                if (!response.ok) throw new Error("Network Error");
                 const total = parseInt(response.headers.get('content-length'), 10);
                 const reader = response.body.getReader();
-                let received = 0;
-                let chunks = [];
-
+                let received = 0; let chunks = [];
                 while(true) {
                     const {done, value} = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                    received += value.length;
-                    
-                    if (total) {
-                        const pct = Math.round((received / total) * 100);
-                        dlFill.style.width = pct + '%';
-                        dlPct.innerText = pct + '%';
-                    } else {
-                        dlPct.innerHTML = '<span class="loading-spin" style="display:inline-block; width:15px; height:15px;">⏳</span>';
-                    }
+                    if (done) break; chunks.push(value); received += value.length;
+                    if (total) { const pct = Math.round((received / total) * 100); dlFill.style.width = pct + '%'; dlPct.innerText = pct + '%'; } 
+                    else { dlPct.innerHTML = '<span class="loading-spin" style="display:inline-block; width:15px; height:15px;">⏳</span>'; }
                 }
-                
-                const blob = new Blob(chunks, { type: 'audio/mpeg' });
-                const objectUrl = URL.createObjectURL(blob);
-                triggerNativeDownload(objectUrl, `${translations[currentLang].surahPrefix}_${sName}.mp3`);
-                URL.revokeObjectURL(objectUrl);
-                
+                const blob = new Blob(chunks, { type: 'audio/mpeg' }); const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = objectUrl; a.download = `${translations[currentLang].surahPrefix}_${sName}.mp3`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(objectUrl);
                 finishDownloadUI(id);
-
             } catch (err) {
-                triggerNativeDownload(url, `${translations[currentLang].surahPrefix}_${sName}.mp3`);
+                const a = document.createElement('a'); a.href = url; a.download = `${translations[currentLang].surahPrefix}_${sName}.mp3`; a.target = '_blank';
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
                 finishDownloadUI(id);
             }
         }
-
-        function triggerNativeDownload(url, filename) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function finishDownloadUI(id) {
-            dlTitle.innerText = translations[currentLang].downloadComplete;
-            dlFill.style.width = '100%';
-            dlPct.innerText = '100%';
-            setTimeout(() => {
-                dlModal.style.display = 'none';
-                delete activeDownloads[id];
-            }, 1500);
-        }
+        function finishDownloadUI(id) { dlTitle.innerText = translations[currentLang].downloadComplete; dlFill.style.width = '100%'; dlPct.innerText = '100%'; setTimeout(() => { dlModal.style.display = 'none'; delete activeDownloads[id]; }, 1500); }
 
         async function selectSheikh(id) {
             currentSheikhId = id;
-            
-            if (id === playingSheikhId && playingEditionId && editionsConfig[id][playingEditionId]) {
-                currentEdition = playingEditionId;
-            } else {
-                currentEdition = savedReciterEditions[id] || 1;
-            }
-
+            if (id === playingSheikhId && playingEditionId && editionsConfig[id][playingEditionId]) currentEdition = playingEditionId; else currentEdition = savedReciterEditions[id] || 1;
             const s = recitersList.find(r => r.id === id);
-            
             document.getElementById('header-avatar-img').src = s.image;
-            
-            const nameToShow = currentLang === 'ar' ? s.nameAr : s.nameEn;
-            document.getElementById('main-title').innerHTML = `${translations[currentLang].sheikhPrefix} <strong>${nameToShow}</strong>`;
-            
-            const descToShow = currentLang === 'ar' ? editionsConfig[id][currentEdition].descAr : editionsConfig[id][currentEdition].descEn;
-            document.getElementById('header-subtitle').innerText = descToShow;
-            
-            renderSheikhCarousel(); 
-            renderEditionDropdown();
-            await loadEditionData(id, currentEdition);
+            document.getElementById('main-title').innerHTML = `${translations[currentLang].sheikhPrefix} <strong>${currentLang === 'ar' ? s.nameAr : s.nameEn}</strong>`;
+            document.getElementById('header-subtitle').innerText = currentLang === 'ar' ? editionsConfig[id][currentEdition].descAr : editionsConfig[id][currentEdition].descEn;
+            renderSheikhCarousel(); renderEditionDropdown(); await loadEditionData(id, currentEdition);
             
             if (playingSurahId && playingSheikhId === id && playingEditionId === currentEdition) {
                 const sData = activeSurahsData.find(sur => sur.id === playingSurahId);
                 if(sData && audioInstance.src === "") {
                     audioInstance.src = sData.url;
-                    const sName = getSurahName(sData.id, sData.name);
                     document.getElementById('global-player').style.display = 'block';
-                    document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
+                    document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${getSurahName(sData.id, sData.name)}`;
                     syncUIWithAudioState();
                 }
             }
@@ -566,119 +450,46 @@
         function toggleDropdown(event) {
             if(event) event.stopPropagation();
             dropdownOpen = !dropdownOpen;
-            const btn = document.getElementById('edition-btn');
-            const menu = document.getElementById('edition-menu');
-            if(dropdownOpen) {
-                btn.classList.add('open');
-                menu.classList.add('show');
-            } else {
-                btn.classList.remove('open');
-                menu.classList.remove('show');
-            }
+            const btn = document.getElementById('edition-btn'), menu = document.getElementById('edition-menu');
+            if(dropdownOpen) { btn.classList.add('open'); menu.classList.add('show'); } else { btn.classList.remove('open'); menu.classList.remove('show'); }
         }
-
-        document.addEventListener('click', (e) => {
-            if(dropdownOpen && !e.target.closest('.edition-dropdown-wrapper')) {
-                toggleDropdown();
-            }
-        });
+        document.addEventListener('click', (e) => { if(dropdownOpen && !e.target.closest('.edition-dropdown-wrapper')) toggleDropdown(); });
 
         function renderEditionDropdown() {
-            const configs = editionsConfig[currentSheikhId];
-            const keys = Object.keys(configs);
-            
+            const configs = editionsConfig[currentSheikhId]; const keys = Object.keys(configs);
             const activePillName = currentLang === 'ar' ? configs[currentEdition].pillAr : configs[currentEdition].pillEn;
-            
-            const menuItems = keys.map(key => {
-                const pillToShow = currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn;
-                const isActive = (currentEdition == key);
-                return `<div class="edition-dropdown-item ${isActive ? 'active' : ''}" onclick="selectEditionDropdown(${key}, event)">
-                            <span>${pillToShow}</span>
-                        </div>`;
-            }).join('');
-
+            const menuItems = keys.map(key => `<div class="edition-dropdown-item ${currentEdition == key ? 'active' : ''}" onclick="selectEditionDropdown(${key}, event)"><span>${currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn}</span></div>`).join('');
             const isSingleEdition = keys.length === 1;
-            
-            document.getElementById('edition-dropdown-wrapper').innerHTML = `
-                <button class="edition-dropdown-btn" id="edition-btn" onclick="${isSingleEdition ? '' : 'toggleDropdown(event)'}" style="${isSingleEdition ? 'cursor: default; opacity: 0.8;' : ''}">
-                    <span>${activePillName}</span>
-                    ${isSingleEdition ? '' : icons.chevronDown}
-                </button>
-                ${isSingleEdition ? '' : `<div class="edition-dropdown-menu" id="edition-menu">${menuItems}</div>`}
-            `;
+            document.getElementById('edition-dropdown-wrapper').innerHTML = `<button class="edition-dropdown-btn" id="edition-btn" onclick="${isSingleEdition ? '' : 'toggleDropdown(event)'}" style="${isSingleEdition ? 'cursor: default; opacity: 0.8;' : ''}"><span>${activePillName}</span>${isSingleEdition ? '' : icons.chevronDown}</button>${isSingleEdition ? '' : `<div class="edition-dropdown-menu" id="edition-menu">${menuItems}</div>`}`;
         }
 
         async function selectEditionDropdown(num, event) {
-            if(event) event.stopPropagation();
-            toggleDropdown(); 
-            if(currentEdition == num) return; 
-            
-            currentEdition = num;
-            savedReciterEditions[currentSheikhId] = num; 
-
-            const descToShow = currentLang === 'ar' ? editionsConfig[currentSheikhId][num].descAr : editionsConfig[currentSheikhId][num].descEn;
-            document.getElementById('header-subtitle').innerText = descToShow;
-            
-            renderEditionDropdown(); 
-            await loadEditionData(currentSheikhId, num);
+            if(event) event.stopPropagation(); toggleDropdown(); if(currentEdition == num) return; 
+            currentEdition = num; savedReciterEditions[currentSheikhId] = num; 
+            document.getElementById('header-subtitle').innerText = currentLang === 'ar' ? editionsConfig[currentSheikhId][num].descAr : editionsConfig[currentSheikhId][num].descEn;
+            renderEditionDropdown(); await loadEditionData(currentSheikhId, num);
         }
 
         function playSurah(id, url) {
             if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
             playingSurahId = id; playingSheikhId = currentSheikhId; playingEditionId = currentEdition;
             audioInstance.src = url; audioInstance.play();
-            
             localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: playingSheikhId, edition: playingEditionId, surah: playingSurahId }));
-            
-            const sData = activeSurahsData.find(s => s.id === id);
-            const sName = getSurahName(id, sData.name);
+            const sData = activeSurahsData.find(s => s.id === id); const sName = getSurahName(id, sData.name);
             const sheikhObj = recitersList.find(r => r.id === currentSheikhId);
-            const sheikhName = currentLang === 'ar' ? sheikhObj.nameAr : sheikhObj.nameEn;
-            
-            document.getElementById('global-player').style.display = 'block';
-            document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
+            document.getElementById('global-player').style.display = 'block'; document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
             syncUIWithAudioState();
-
-            // --- تفعيل التحكم من شاشة القفل (Media Session API) ---
             if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: `${translations[currentLang].surahPrefix} ${sName}`,
-                    artist: sheikhName,
-                    album: 'مصحف كبار القراء',
-                    artwork: [
-                        { src: sheikhObj.image, sizes: '512x512', type: 'image/jpeg' } 
-                    ]
-                });
-
-                navigator.mediaSession.setActionHandler('play', () => togglePlayPause());
-                navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
-                navigator.mediaSession.setActionHandler('previoustrack', () => playPrevious());
-                navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
-                navigator.mediaSession.setActionHandler('seekto', (details) => {
-                    if (details.fastSeek && 'fastSeek' in audioInstance) {
-                        audioInstance.fastSeek(details.seekTime);
-                    } else {
-                        audioInstance.currentTime = details.seekTime;
-                    }
-                });
+                navigator.mediaSession.metadata = new MediaMetadata({ title: `${translations[currentLang].surahPrefix} ${sName}`, artist: currentLang === 'ar' ? sheikhObj.nameAr : sheikhObj.nameEn, album: 'مصحف كبار القراء', artwork: [ { src: sheikhObj.image, sizes: '512x512', type: 'image/jpeg' } ] });
+                navigator.mediaSession.setActionHandler('play', () => togglePlayPause()); navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
+                navigator.mediaSession.setActionHandler('previoustrack', () => playPrevious()); navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
+                navigator.mediaSession.setActionHandler('seekto', (details) => { audioInstance.currentTime = details.seekTime; });
             }
         }
 
-        function togglePlayPause() {
-            if (audioInstance.paused && audioInstance.src) audioInstance.play(); 
-            else audioInstance.pause();
-            syncUIWithAudioState();
-        }
-
-        function playNext() {
-            const idx = activeSurahsData.findIndex(s => s.id === playingSurahId);
-            if (idx < activeSurahsData.length - 1) { const next = activeSurahsData[idx + 1]; playSurah(next.id, next.url); }
-        }
-
-        function playPrevious() {
-            const idx = activeSurahsData.findIndex(s => s.id === playingSurahId);
-            if (idx > 0) { const prev = activeSurahsData[idx - 1]; playSurah(prev.id, prev.url); }
-        }
+        function togglePlayPause() { if (audioInstance.paused && audioInstance.src) audioInstance.play(); else audioInstance.pause(); syncUIWithAudioState(); }
+        function playNext() { const idx = activeSurahsData.findIndex(s => s.id === playingSurahId); if (idx < activeSurahsData.length - 1) { const next = activeSurahsData[idx + 1]; playSurah(next.id, next.url); } }
+        function playPrevious() { const idx = activeSurahsData.findIndex(s => s.id === playingSurahId); if (idx > 0) { const prev = activeSurahsData[idx - 1]; playSurah(prev.id, prev.url); } }
 
         audioInstance.addEventListener('waiting', () => { isBuffering = true; syncUIWithAudioState(); });
         audioInstance.addEventListener('playing', () => { isBuffering = false; syncUIWithAudioState(); });
@@ -688,65 +499,32 @@
         
         audioInstance.ontimeupdate = () => {
             if (audioInstance.duration && !isDragging) {
-                const pct = (audioInstance.currentTime / audioInstance.duration) * 100;
-                document.getElementById('progress-bar-fill').style.width = pct + '%';
+                document.getElementById('progress-bar-fill').style.width = ((audioInstance.currentTime / audioInstance.duration) * 100) + '%';
                 document.getElementById('curr-time').innerText = formatTime(audioInstance.currentTime);
                 document.getElementById('total-time').innerText = formatTime(audioInstance.duration);
             }
         };
 
-        function formatTime(s) { 
-            if(isNaN(s)) return "00:00";
-            const m = Math.floor(s/60), sec = Math.floor(s%60); 
-            return `${m}:${sec < 10 ? '0'+sec : sec}`; 
-        }
+        function formatTime(s) { if(isNaN(s)) return "00:00"; const m = Math.floor(s/60), sec = Math.floor(s%60); return `${m}:${sec < 10 ? '0'+sec : sec}`; }
 
-        let isDragging = false;
-        const progressContainer = document.getElementById('progress-container');
-
-        const seek = (e) => {
-            const rect = progressContainer.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const pct = Math.min(Math.max(0, (clientX - rect.left) / rect.width), 1);
-            document.getElementById('progress-bar-fill').style.width = (pct * 100) + '%';
-            return pct;
-        };
-
-        progressContainer.addEventListener('mousedown', () => isDragging = true);
-        window.addEventListener('mousemove', (e) => { if (isDragging) seek(e); });
-        window.addEventListener('mouseup', (e) => { if (isDragging) { isDragging = false; audioInstance.currentTime = seek(e) * audioInstance.duration; } });
-        
-        progressContainer.addEventListener('touchstart', () => isDragging = true);
-        window.addEventListener('touchmove', (e) => { if (isDragging) seek(e); });
-        window.addEventListener('touchend', (e) => { if (isDragging) { isDragging = false; } }); 
-
+        let isDragging = false; const progressContainer = document.getElementById('progress-container');
+        const seek = (e) => { const rect = progressContainer.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const pct = Math.min(Math.max(0, (clientX - rect.left) / rect.width), 1); document.getElementById('progress-bar-fill').style.width = (pct * 100) + '%'; return pct; };
+        progressContainer.addEventListener('mousedown', () => isDragging = true); window.addEventListener('mousemove', (e) => { if (isDragging) seek(e); }); window.addEventListener('mouseup', (e) => { if (isDragging) { isDragging = false; audioInstance.currentTime = seek(e) * audioInstance.duration; } });
+        progressContainer.addEventListener('touchstart', () => isDragging = true); window.addEventListener('touchmove', (e) => { if (isDragging) seek(e); }); window.addEventListener('touchend', (e) => { if (isDragging) { isDragging = false; } }); 
         progressContainer.addEventListener('click', (e) => { audioInstance.currentTime = seek(e) * audioInstance.duration; });
 
-        // تهيئة التطبيق عند الفتح
+        window.addEventListener('load', () => { 
+            setTimeout(() => { const splash = document.getElementById('splash-screen'); splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500); }, 1500); 
+        });
+
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed')); }); }
+
         (async () => {
             document.getElementById('theme-toggle-btn').innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
-            
-            let targetSheikh = 'husary';
-            const savedState = JSON.parse(localStorage.getItem('lastPlayedQuran'));
-            
-            if(savedState) {
-                targetSheikh = savedState.sheikh;
-                savedReciterEditions[targetSheikh] = savedState.edition;
-                
-                playingSheikhId = savedState.sheikh;
-                playingEditionId = savedState.edition;
-                playingSurahId = savedState.surah;
-            }
-
+            let targetSheikh = 'husary'; const savedState = JSON.parse(localStorage.getItem('lastPlayedQuran'));
+            if(savedState) { targetSheikh = savedState.sheikh; savedReciterEditions[targetSheikh] = savedState.edition; playingSheikhId = savedState.sheikh; playingEditionId = savedState.edition; playingSurahId = savedState.surah; }
             await selectSheikh(targetSheikh);
         })();
-
-        // --- تسجيل Service Worker لتفعيل ميزة التطبيق (PWA) ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
-            });
-        }
     </script>
 </body>
 </html>
