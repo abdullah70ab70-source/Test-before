@@ -19,7 +19,7 @@
             --bg-dark: #f8faf9; --bg-mid: #ffffff; --bg-light: #f0f4f2;
             --accent-gold: #c5a059; --accent-hover: #b38f4d;
             --text-main: #2c3e50; --text-muted: #7f8c8d;
-            --glass-bg: rgba(0, 0, 0, 0.02); --glass-border: rgba(0, 0, 0, 0.05);
+            --glass-bg: rgba(0, 0, 0, 0.04); --glass-border: rgba(0, 0, 0, 0.05);
             --glass-active: rgba(197, 160, 89, 0.08);
             --player-bg: rgba(255, 255, 255, 0.98);
             --shadow-intensity: rgba(0, 0, 0, 0.05);
@@ -28,7 +28,7 @@
         body.dark-theme {
             --bg-dark: #121212; --bg-mid: #1c1c1c; --bg-light: #252525;
             --text-main: #ffffff; --text-muted: #9a9a9a;
-            --glass-bg: rgba(255, 255, 255, 0.02); --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.06); --glass-border: rgba(255, 255, 255, 0.08);
             --glass-active: rgba(197, 160, 89, 0.12);
             --player-bg: rgba(26, 26, 26, 0.98);
             --shadow-intensity: rgba(0, 0, 0, 0.5);
@@ -58,6 +58,7 @@
         header h1 strong { font-weight: 700; color: var(--accent-gold); }
         header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
+        /* --- استعادة تصميم القراء الأول المأطر --- */
         .sheikh-selector-wrapper { width: 100%; margin: 15px 0; }
         .sheikh-list { display: flex; gap: 12px; overflow-x: auto; padding: 5px 5px 15px 5px; scrollbar-width: none; }
         .sheikh-list::-webkit-scrollbar { display: none; }
@@ -78,40 +79,90 @@
         .playing-badge::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-gold); border-radius: 50%; z-index: -1; animation: pulse-ring 1.5s infinite; }
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
-        .pills-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
-        .pill-item {
-            background: var(--bg-mid); border: 1px solid var(--glass-border); color: var(--text-muted); transition: 0.2s;
-            padding: 6px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+        /* --- القائمة المنسدلة للختمات (محاذاة لليمين، تصميم احترافي ومبتكر) --- */
+        .edition-dropdown-wrapper { 
+            position: relative; margin: 5px 5px 20px 5px; z-index: 10; 
+            display: flex; justify-content: flex-start; 
         }
-        .pill-item.active { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); }
+        .edition-dropdown-btn { 
+            background: var(--bg-mid); 
+            border: 1px solid var(--glass-border); 
+            color: var(--text-main); 
+            padding: 8px 16px 8px 12px; 
+            border-radius: 12px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow-intensity);
+            font-family: inherit;
+        }
+        .edition-dropdown-btn::before {
+            content: ''; width: 4px; height: 16px; 
+            background: var(--accent-gold); border-radius: 4px;
+        }
+        .edition-dropdown-btn:hover { border-color: var(--accent-gold); box-shadow: 0 6px 16px rgba(197, 160, 89, 0.15); }
+        .edition-dropdown-btn:active { transform: translateY(2px); }
+        
+        .edition-dropdown-btn svg { 
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            color: var(--text-muted); width: 16px; height: 16px; margin-right: 4px;
+        }
+        .edition-dropdown-btn.open svg { transform: rotate(180deg); color: var(--accent-gold); }
+        
+        .edition-dropdown-menu { 
+            position: absolute; top: 100%; 
+            right: 0; 
+            margin-top: 8px; 
+            min-width: 190px; 
+            background: var(--bg-mid); border: 1px solid var(--glass-border); 
+            border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); 
+            overflow: hidden; max-height: 0; opacity: 0; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
+            transform: translateY(-10px);
+        }
+        .edition-dropdown-menu.show { max-height: 300px; opacity: 1; pointer-events: auto; transform: translateY(0); }
+        
+        .edition-dropdown-item { 
+            padding: 12px 16px; 
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); 
+            cursor: pointer; transition: all 0.25s ease; 
+            display: flex; align-items: center; justify-content: space-between;
+            border-right: 3px solid transparent;
+        }
+        .edition-dropdown-item:not(:last-child) { border-bottom: 1px solid var(--glass-border); }
+        .edition-dropdown-item:hover { background: var(--glass-bg); color: var(--text-main); padding-right: 20px; }
+        .edition-dropdown-item.active { background: var(--glass-active); color: var(--accent-gold); font-weight: 700; border-right-color: var(--accent-gold); }
+        
 
-        .surah-list-container { display: flex; flex-direction: column; gap: 6px; }
+        /* قائمة السور */
+        .surah-list-container { display: flex; flex-direction: column; gap: 8px; }
         .surah-row {
-            display: flex; align-items: center; justify-content: space-between; padding: 12px 15px;
-            background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 12px; transition: 0.15s;
+            display: flex; align-items: center; justify-content: space-between; padding: 14px 16px;
+            background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 14px; transition: 0.15s;
         }
         .surah-row.active-row { border-color: var(--accent-gold); background: var(--glass-active); }
-        .surah-info { display: flex; align-items: center; gap: 12px; }
-        .surah-number { font-size: 0.75rem; color: var(--accent-gold); font-weight: 700; min-width: 25px; }
-        .surah-name { font-size: 0.88rem; font-weight: 600; color: var(--text-main); }
+        .surah-info { display: flex; align-items: center; gap: 14px; }
+        .surah-number { font-size: 0.8rem; color: var(--accent-gold); font-weight: 700; min-width: 25px; }
+        .surah-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
         
-        .surah-actions { display: flex; align-items: center; gap: 8px; }
+        .surah-actions { display: flex; align-items: center; gap: 10px; }
         .surah-action-btn { 
-            width: 34px; height: 34px; border-radius: 50%; 
+            width: 36px; height: 36px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
             background: var(--bg-light); border: 1px solid var(--glass-border); 
             color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s;
         }
         .surah-action-btn:hover { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); }
-        .surah-action-btn svg { width: 14px !important; height: 14px !important; }
+        .surah-action-btn svg { width: 16px !important; height: 16px !important; }
         
-        .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 2px 8px rgba(197, 160, 89, 0.4); }
+        .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); }
         .active-row .play-cell:hover { color: #fff; transform: scale(1.05); }
 
         .icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
         .icon-btn:hover { color: var(--accent-gold); }
 
-        /* نافذة التحميل المنبثقة الاحترافية */
+        /* نافذة التحميل المنبثقة */
         .download-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
@@ -168,7 +219,9 @@
         </header>
 
         <div class="sheikh-selector-wrapper"><div class="sheikh-list" id="sheikh-carousel"></div></div>
-        <div class="pills-container" id="pills-container"></div>
+        
+        <div class="edition-dropdown-wrapper" id="edition-dropdown-wrapper"></div>
+        
         <div class="surah-list-container" id="main-surah-list"></div>
     </div>
 
@@ -220,15 +273,15 @@
         };
         let currentLang = 'ar';
 
+        // --- تحديث مسارات الصور لتتوافق مع المرفوعة على GitHub مباشرة ---
         const recitersList = [
-            { id: "husary", nameAr: "محمود خليل الحصري", nameEn: "Mahmoud Khalil Al-Husary", image: "https://h.top4top.io/p_3812jamsy0.jpg" },
-            { id: "minshawi", nameAr: "محمد صديق المنشاوي", nameEn: "Muhammad Siddiq Minshawi", image: "https://f.top4top.io/p_38068cvpd0.jpg" },
-            { id: "mustafa", nameAr: "مصطفى إسماعيل", nameEn: "Mustafa Ismail", image: "https://i.top4top.io/p_3812x41cu1.jpg" },
-            { id: "banna", nameAr: "محمود علي البنا", nameEn: "Mahmoud Ali Al-Banna", image: "https://k.top4top.io/p_3812hi6wr3.jpeg" },
-            { id: "basit", nameAr: "عبد الباسط عبد الصمد", nameEn: "Abdul Basit Abdul Samad", image: "https://j.top4top.io/p_38125kmkj2.jpeg" }
+            { id: "husary", nameAr: "محمود خليل الحصري", nameEn: "Mahmoud Khalil Al-Husary", image: "hosary.jpg" },
+            { id: "minshawi", nameAr: "محمد صديق المنشاوي", nameEn: "Muhammad Siddiq Minshawi", image: "minshawy.jpg" },
+            { id: "mustafa", nameAr: "مصطفى إسماعيل", nameEn: "Mustafa Ismail", image: "mustafa.jpg" },
+            { id: "banna", nameAr: "محمود علي البنا", nameEn: "Mahmoud Ali Al-Banna", image: "banna.jpg" },
+            { id: "basit", nameAr: "عبد الباسط عبد الصمد", nameEn: "Abdul Basit Abdul Samad", image: "basit.jpg" }
         ];
 
-        // --- تحديث الختمات بناءً على الطلب ---
         const editionsConfig = {
             "husary": { 
                 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "husary_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 
@@ -258,13 +311,16 @@
             loading: '<svg class="loading-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>',
             sun: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>',
             moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>',
-            download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
+            download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+            chevronDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'
         };
 
         let currentTheme = 'light', currentSheikhId = "husary", currentEdition = 1;
         let activeSurahsData = [], playingSurahId = null, playingSheikhId = null, playingEditionId = null, isBuffering = false;
         let audioInstance = new Audio();
         let activeDownloads = {};
+        let dropdownOpen = false;
+        let savedReciterEditions = {}; 
 
         function getSurahName(id, nameAr) {
             return currentLang === 'ar' ? nameAr : surahNamesEn[id];
@@ -282,8 +338,10 @@
             
             if (playingSurahId) {
                 const sData = activeSurahsData.find(s => s.id === playingSurahId);
-                const sName = getSurahName(sData.id, sData.name);
-                document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
+                if(sData) {
+                    const sName = getSurahName(sData.id, sData.name);
+                    document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
+                }
             }
         }
 
@@ -323,7 +381,6 @@
 
         async function loadEditionData(sheikhId, editionNum) {
             const config = editionsConfig[sheikhId][editionNum];
-            // إضافة حماية إذا كانت الختمة غير موجودة (عند تغيير الشيخ)
             if (!config) return; 
             
             const cacheKey = `cache_${config.file}`;
@@ -343,7 +400,7 @@
                 const nameToShow = currentLang === 'ar' ? s.nameAr : s.nameEn;
                 return `
                 <div class="sheikh-item ${s.id === currentSheikhId ? 'active' : ''}" data-id="${s.id}" onclick="selectSheikh('${s.id}')">
-                    <div class="sheikh-avatar-container"><img src="${s.image}" class="sheikh-avatar-img"></div>
+                    <div class="sheikh-avatar-container"><img src="${s.image}" class="sheikh-avatar-img" onerror="this.src='https://via.placeholder.com/50?text=Q'"></div>
                     <div style="font-size:0.65rem; font-weight:700; margin-top:6px;">${nameToShow}</div>
                 </div>`;
             }).join('');
@@ -446,8 +503,13 @@
 
         async function selectSheikh(id) {
             currentSheikhId = id;
-            // إذا تغير الشيخ نعود للإصدار الأول إلا إذا كان الشيخ قيد التشغيل حالياً ونفس الإصدار موجود
-            currentEdition = (id === playingSheikhId && playingEditionId && editionsConfig[id][playingEditionId]) ? playingEditionId : 1;
+            
+            if (id === playingSheikhId && playingEditionId && editionsConfig[id][playingEditionId]) {
+                currentEdition = playingEditionId;
+            } else {
+                currentEdition = savedReciterEditions[id] || 1;
+            }
+
             const s = recitersList.find(r => r.id === id);
             
             document.getElementById('header-avatar-img').src = s.image;
@@ -459,29 +521,89 @@
             document.getElementById('header-subtitle').innerText = descToShow;
             
             renderSheikhCarousel(); 
-            renderEditionSelector();
+            renderEditionDropdown();
             await loadEditionData(id, currentEdition);
+            
+            // تهيئة المشغل إذا كان هناك سورة سابقة مسجلة (الذاكرة الذكية)
+            if (playingSurahId && playingSheikhId === id && playingEditionId === currentEdition) {
+                const sData = activeSurahsData.find(sur => sur.id === playingSurahId);
+                if(sData && audioInstance.src === "") {
+                    audioInstance.src = sData.url;
+                    const sName = getSurahName(sData.id, sData.name);
+                    document.getElementById('global-player').style.display = 'block';
+                    document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
+                    syncUIWithAudioState();
+                }
+            }
         }
 
-        function renderEditionSelector() {
+        function toggleDropdown(event) {
+            if(event) event.stopPropagation();
+            dropdownOpen = !dropdownOpen;
+            const btn = document.getElementById('edition-btn');
+            const menu = document.getElementById('edition-menu');
+            if(dropdownOpen) {
+                btn.classList.add('open');
+                menu.classList.add('show');
+            } else {
+                btn.classList.remove('open');
+                menu.classList.remove('show');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if(dropdownOpen && !e.target.closest('.edition-dropdown-wrapper')) {
+                toggleDropdown();
+            }
+        });
+
+        function renderEditionDropdown() {
             const configs = editionsConfig[currentSheikhId];
-            document.getElementById('pills-container').innerHTML = Object.keys(configs).map(key => {
+            const keys = Object.keys(configs);
+            
+            const activePillName = currentLang === 'ar' ? configs[currentEdition].pillAr : configs[currentEdition].pillEn;
+            
+            const menuItems = keys.map(key => {
                 const pillToShow = currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn;
-                return `<div class="pill-item ${currentEdition == key ? 'active' : ''}" onclick="switchEdition(${key})">${pillToShow}</div>`;
+                const isActive = (currentEdition == key);
+                return `<div class="edition-dropdown-item ${isActive ? 'active' : ''}" onclick="selectEditionDropdown(${key}, event)">
+                            <span>${pillToShow}</span>
+                        </div>`;
             }).join('');
+
+            const isSingleEdition = keys.length === 1;
+            
+            document.getElementById('edition-dropdown-wrapper').innerHTML = `
+                <button class="edition-dropdown-btn" id="edition-btn" onclick="${isSingleEdition ? '' : 'toggleDropdown(event)'}" style="${isSingleEdition ? 'cursor: default; opacity: 0.8;' : ''}">
+                    <span>${activePillName}</span>
+                    ${isSingleEdition ? '' : icons.chevronDown}
+                </button>
+                ${isSingleEdition ? '' : `<div class="edition-dropdown-menu" id="edition-menu">${menuItems}</div>`}
+            `;
         }
 
-        async function switchEdition(num) {
+        async function selectEditionDropdown(num, event) {
+            if(event) event.stopPropagation();
+            toggleDropdown(); 
+            if(currentEdition == num) return; 
+            
             currentEdition = num;
+            savedReciterEditions[currentSheikhId] = num; 
+
             const descToShow = currentLang === 'ar' ? editionsConfig[currentSheikhId][num].descAr : editionsConfig[currentSheikhId][num].descEn;
             document.getElementById('header-subtitle').innerText = descToShow;
-            renderEditionSelector(); await loadEditionData(currentSheikhId, num);
+            
+            renderEditionDropdown(); 
+            await loadEditionData(currentSheikhId, num);
         }
 
         function playSurah(id, url) {
             if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
             playingSurahId = id; playingSheikhId = currentSheikhId; playingEditionId = currentEdition;
             audioInstance.src = url; audioInstance.play();
+            
+            // حفظ حالة التشغيل في الذاكرة لتذكرها عند العودة للموقع
+            localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: playingSheikhId, edition: playingEditionId, surah: playingSurahId }));
             
             const sData = activeSurahsData.find(s => s.id === id);
             const sName = getSurahName(id, sData.name);
@@ -492,7 +614,8 @@
         }
 
         function togglePlayPause() {
-            if (audioInstance.paused) audioInstance.play(); else audioInstance.pause();
+            if (audioInstance.paused && audioInstance.src) audioInstance.play(); 
+            else audioInstance.pause();
             syncUIWithAudioState();
         }
 
@@ -521,7 +644,11 @@
             }
         };
 
-        function formatTime(s) { const m = Math.floor(s/60), sec = Math.floor(s%60); return `${m}:${sec < 10 ? '0'+sec : sec}`; }
+        function formatTime(s) { 
+            if(isNaN(s)) return "00:00";
+            const m = Math.floor(s/60), sec = Math.floor(s%60); 
+            return `${m}:${sec < 10 ? '0'+sec : sec}`; 
+        }
 
         let isDragging = false;
         const progressContainer = document.getElementById('progress-container');
@@ -544,9 +671,24 @@
 
         progressContainer.addEventListener('click', (e) => { audioInstance.currentTime = seek(e) * audioInstance.duration; });
 
+        // تهيئة التطبيق عند الفتح
         (async () => {
             document.getElementById('theme-toggle-btn').innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
-            await selectSheikh('husary');
+            
+            // استرجاع الذاكرة الذكية من LocalStorage
+            let targetSheikh = 'husary';
+            const savedState = JSON.parse(localStorage.getItem('lastPlayedQuran'));
+            
+            if(savedState) {
+                targetSheikh = savedState.sheikh;
+                savedReciterEditions[targetSheikh] = savedState.edition;
+                
+                playingSheikhId = savedState.sheikh;
+                playingEditionId = savedState.edition;
+                playingSurahId = savedState.surah;
+            }
+
+            await selectSheikh(targetSheikh);
         })();
     </script>
 </body>
