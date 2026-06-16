@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- العنوان ووصف الموقع -->
     <title>Egy Quran - استمع وحمل القرآن الكريم بأصوات كبار القراء</title>
     <meta name="description" content="منصة Egy Quran تتيح لك الاستماع وتحميل القرآن الكريم بجودة عالية وبأصوات كبار القراء مثل الحصري، المنشاوي، عبد الباسط، مع دعم التشغيل التلقائي والتكرار.">
     <meta name="keywords" content="قرآن كريم, استماع القرآن, تحميل القرآن, مصحف كبار القراء, الحصري, المنشاوي, عبد الباسط عبد الصمد, mp3 قرآن, Egy Quran">
     <meta http-equiv="content-language" content="ar">
 
+    <!-- إرشاد عناكب البحث -->
     <link rel="canonical" href="https://egyquran.com/">
     <meta name="robots" content="index, follow">
 
+    <!-- Open Graph (للمشاركة على فيسبوك، واتساب، وتليجرام) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://egyquran.com/">
     <meta property="og:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta property="og:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة بدون إعلانات مزعجة.">
     <meta property="og:image" content="https://egyquran.com/icon.png">
 
+    <!-- Twitter Cards (للمشاركة على تويتر/X) -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta name="twitter:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة.">
     <meta name="twitter:image" content="https://egyquran.com/icon.png">
 
+    <!-- البيانات المهيكلة (Schema Markup) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -48,6 +53,7 @@
     <meta name="apple-mobile-web-app-title" content="Egy Quran">
     <link rel="apple-touch-icon" href="icon.png">
 
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8Q3DV5BJF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -204,11 +210,13 @@
 </head>
 <body>
 
+    <!-- شاشة الترحيب -->
     <div id="splash-screen">
         <img src="icon.png" class="splash-logo" alt="Egy Quran">
         <div class="splash-title">Egy Quran</div>
     </div>
 
+    <!-- رسالة استئناف الاستماع -->
     <div id="resume-banner">
         <div class="resume-text" id="resume-text">هل تود إكمال الاستماع؟</div>
         <div class="resume-actions">
@@ -217,6 +225,7 @@
         </div>
     </div>
 
+    <!-- رسالة التوست -->
     <div id="toast" class="toast"></div>
 
     <div class="container">
@@ -229,8 +238,15 @@
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
                 </a>
+                <!-- زر تثبيت التطبيق بتصميم جديد (شبكة تطبيقات مع زر +) -->
                 <button class="top-btn" id="install-btn" style="display: none;" title="تثبيت التطبيق">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+                      <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+                      <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+                      <line x1="17" y1="14" x2="17" y2="20"></line>
+                      <line x1="14" y1="17" x2="20" y2="17"></line>
+                    </svg>
                 </button>
             </div>
             <button class="top-btn" onclick="toggleLanguage()"><span id="lang-label">EN</span></button>
@@ -273,7 +289,9 @@
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
                 
-                <div style="width: 70px;"></div> <div style="display:flex; align-items:center; gap:16px;">
+                <div style="width: 70px;"></div> <!-- Placeholder للحفاظ على التوسيط -->
+                
+                <div style="display:flex; align-items:center; gap:16px;">
                     <button class="icon-btn" onclick="playPrevious()" title="السابق">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                     </button>
