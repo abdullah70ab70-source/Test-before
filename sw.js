@@ -1,30 +1,38 @@
-const CACHE_NAME = 'egy-quran-v2';
+const CACHE_NAME = 'egy-quran-v3';
 
-// قائمة بجميع الملفات الأساسية التي نريد حفظها في ذاكرة الهاتف
+// قائمة بالملفات الأساسية
 const ASSETS = [
-    '/',
-    '/index.html',
-    '/icon.png',
-    '/manifest.json',
-    '/hosary.jpg', '/minshawy.jpg', '/mustafa.jpg', '/banna.jpg', '/basit.jpg',
-    '/husary_1.json', '/husary_2.json', '/husary_3.json', '/husary_4.json', '/husary_5.json',
-    '/minshawi_1.json', '/minshawi_2.json',
-    '/mustafa_1.json',
-    '/banna_1.json',
-    '/basit_1.json'
+    './',
+    './index.html',
+    './icon.png',
+    './manifest.json',
+    './hosary.jpg', 
+    './minshawy.jpg', 
+    './mustafa.jpg', 
+    './banna.jpg', 
+    './basit.jpg',
+    './husary_1.json', './husary_2.json', './husary_3.json', './husary_4.json', './husary_5.json',
+    './minshawi_1.json', './minshawi_2.json',
+    './mustafa_1.json',
+    './banna_1.json',
+    './basit_1.json'
 ];
 
-// حدث التثبيت: حفظ الملفات في الكاش
+// حدث التثبيت: تخزين الملفات بشكل آمن لا يتأثر لو كان هناك ملف مفقود
 self.addEventListener('install', (e) => {
+    self.skipWaiting(); // إجبار المتصفح على تشغيل النسخة الجديدة فوراً
     e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS);
+            return Promise.all(
+                ASSETS.map(url => {
+                    return cache.add(url).catch(err => console.log('تم تخطي هذا الملف:', url));
+                })
+            );
         })
     );
-    self.skipWaiting();
 });
 
-// حدث التفعيل: مسح الكاش القديم إن وجد لضمان تحديث الموقع
+// حدث التفعيل: مسح الكاش القديم
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then((keys) => {
@@ -35,30 +43,31 @@ self.addEventListener('activate', (e) => {
             }));
         })
     );
-    self.clients.claim();
+    self.clients.claim(); // السيطرة على الصفحة فوراً
 });
 
-// حدث الجلب (تم تحديثه لحل مشكلة السحب للأسفل / الريفريش)
+// حدث الجلب (Fetch) لمعالجة الريفريش وتشغيل الموقع بدون إنترنت
 self.addEventListener('fetch', (e) => {
-    // لا نقم بتخزين ملفات الـ mp3 الصوتية في الكاش
+    // عدم تخزين الصوتيات في ذاكرة الهاتف
     if (e.request.url.includes('.mp3')) {
         return; 
     }
 
+    // 1. معالجة "الريفريش" والسحب للأسفل
+    if (e.request.mode === 'navigate') {
+        e.respondWith(
+            fetch(e.request).catch(() => {
+                // إذا كان النت فاصلاً، اعرض الصفحة المحفوظة إجبارياً
+                return caches.match('./index.html') || caches.match('./');
+            })
+        );
+        return;
+    }
+
+    // 2. معالجة باقي الملفات (الصور والأكواد)
     e.respondWith(
         caches.match(e.request, { ignoreSearch: true }).then((cachedResponse) => {
-            // 1. إذا كان الملف موجوداً في الكاش، قم بعرضه
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-            
-            // 2. إذا لم يكن موجوداً، حاول جلبه من الإنترنت
-            return fetch(e.request).catch(() => {
-                // 3. (الحل) إذا انقطع الإنترنت والمستخدم يحاول عمل ريفريش، افتح له التطبيق من الكاش إجبارياً
-                if (e.request.mode === 'navigate') {
-                    return caches.match('/index.html');
-                }
-            });
+            return cachedResponse || fetch(e.request);
         })
     );
 });
