@@ -1,4 +1,4 @@
-const CACHE_NAME = 'egy-quran-v1';
+const CACHE_NAME = 'egy-quran-v2';
 
 // قائمة بجميع الملفات الأساسية التي نريد حفظها في ذاكرة الهاتف
 const ASSETS = [
@@ -24,7 +24,7 @@ self.addEventListener('install', (e) => {
     self.skipWaiting();
 });
 
-// حدث التفعيل: مسح الكاش القديم إن وجد لضمان تحديث الموقع دائماً
+// حدث التفعيل: مسح الكاش القديم إن وجد لضمان تحديث الموقع
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then((keys) => {
@@ -38,17 +38,27 @@ self.addEventListener('activate', (e) => {
     self.clients.claim();
 });
 
-// حدث الجلب: عرض الملفات من الكاش في حال انقطاع الإنترنت
+// حدث الجلب (تم تحديثه لحل مشكلة السحب للأسفل / الريفريش)
 self.addEventListener('fetch', (e) => {
-    // لا نقم بتخزين ملفات الـ mp3 الصوتية في الكاش حتى لا تمتلىء ذاكرة هاتف المستخدم
+    // لا نقم بتخزين ملفات الـ mp3 الصوتية في الكاش
     if (e.request.url.includes('.mp3')) {
         return; 
     }
 
     e.respondWith(
-        caches.match(e.request).then((cachedResponse) => {
-            // إذا كان الملف موجوداً في الكاش، قم بعرضه، وإلا قم بجلبه من الإنترنت
-            return cachedResponse || fetch(e.request);
+        caches.match(e.request, { ignoreSearch: true }).then((cachedResponse) => {
+            // 1. إذا كان الملف موجوداً في الكاش، قم بعرضه
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+            
+            // 2. إذا لم يكن موجوداً، حاول جلبه من الإنترنت
+            return fetch(e.request).catch(() => {
+                // 3. (الحل) إذا انقطع الإنترنت والمستخدم يحاول عمل ريفريش، افتح له التطبيق من الكاش إجبارياً
+                if (e.request.mode === 'navigate') {
+                    return caches.match('/index.html');
+                }
+            });
         })
     );
 });
