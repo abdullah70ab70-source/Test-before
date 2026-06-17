@@ -4,30 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- العنوان ووصف الموقع -->
     <title>Egy Quran - استمع وحمل القرآن الكريم بأصوات كبار القراء</title>
     <meta name="description" content="منصة Egy Quran تتيح لك الاستماع وتحميل القرآن الكريم بجودة عالية وبأصوات كبار القراء مثل الحصري، المنشاوي، عبد الباسط، مع دعم التشغيل التلقائي والتكرار.">
     <meta name="keywords" content="قرآن كريم, استماع القرآن, تحميل القرآن, مصحف كبار القراء, الحصري, المنشاوي, عبد الباسط عبد الصمد, mp3 قرآن, Egy Quran">
     <meta http-equiv="content-language" content="ar">
 
-    <!-- إرشاد عناكب البحث -->
     <link rel="canonical" href="https://egyquran.com/">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph (للمشاركة على فيسبوك، واتساب، وتليجرام) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://egyquran.com/">
     <meta property="og:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta property="og:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة بدون إعلانات مزعجة.">
     <meta property="og:image" content="https://egyquran.com/icon.png">
 
-    <!-- Twitter Cards (للمشاركة على تويتر/X) -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta name="twitter:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة.">
     <meta name="twitter:image" content="https://egyquran.com/icon.png">
 
-    <!-- البيانات المهيكلة (Schema Markup) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -53,7 +48,6 @@
     <meta name="apple-mobile-web-app-title" content="Egy Quran">
     <link rel="apple-touch-icon" href="icon.png">
 
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8Q3DV5BJF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -259,7 +253,6 @@
 </head>
 <body>
 
-    <!-- رسالة تثبيت التطبيق الانزلاقية -->
     <div id="install-banner" class="install-banner">
         <img src="icon.png" alt="App Icon" class="install-icon">
         <div class="install-info">
@@ -272,7 +265,6 @@
         </button>
     </div>
 
-    <!-- رسالة استئناف الاستماع -->
     <div id="resume-banner">
         <div class="resume-text" id="resume-text">هل تود إكمال الاستماع؟</div>
         <div class="resume-actions">
@@ -281,7 +273,6 @@
         </div>
     </div>
 
-    <!-- رسالة التوست -->
     <div id="toast" class="toast"></div>
 
     <div class="container">
@@ -295,7 +286,6 @@
                     </svg>
                 </a>
                 
-                <!-- زر إذاعة القرآن الكريم مع الإرشاد (Tooltip & Badge) -->
                 <div class="radio-wrapper">
                     <button class="top-btn" id="radio-btn" onclick="playRadio()" title="إذاعة القرآن الكريم">
                         <span class="radio-badge" id="radio-badge"></span>
@@ -349,9 +339,7 @@
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
                 
-                <div style="width: 70px;"></div> <!-- Placeholder للحفاظ على التوسيط -->
-                
-                <div style="display:flex; align-items:center; gap:16px;">
+                <div style="width: 70px;"></div> <div style="display:flex; align-items:center; gap:16px;">
                     <button class="icon-btn" onclick="playPrevious()" title="السابق">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                     </button>
@@ -402,7 +390,6 @@
         // التعامل مع شريط تثبيت التطبيق الانزلاقي
         function closeInstallBanner() {
             document.getElementById('install-banner').classList.remove('show');
-            sessionStorage.setItem('installBannerClosed', 'true');
         }
 
         const surahNamesEn = [
@@ -521,12 +508,6 @@
 
         document.addEventListener('click', (e) => {
             if (playbackMenuOpen && !e.target.closest('#playback-wrapper')) togglePlaybackMenu();
-            
-            // إخفاء إرشاد الراديو بمجرد نقر المستخدم في أي مكان لضمان عدم إزعاجه
-            const radioTooltip = document.getElementById('radio-tooltip');
-            if (radioTooltip && radioTooltip.classList.contains('show') && !e.target.closest('#radio-btn')) {
-                hideRadioDiscovery();
-            }
         });
 
         function setPlaybackMode(mode, event) {
@@ -930,12 +911,10 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // إظهار الرسالة فقط إذا لم يقم المستخدم بإغلاقها في هذه الجلسة
-            if (!sessionStorage.getItem('installBannerClosed')) {
-                setTimeout(() => {
-                    document.getElementById('install-banner').classList.add('show');
-                }, 2000); // تأخير بسيط لظهور أنيق
-            }
+            // إظهار الرسالة دائما طالما التطبيق لم يثبت
+            setTimeout(() => {
+                document.getElementById('install-banner').classList.add('show');
+            }, 2000); 
         });
 
         document.getElementById('install-action-btn').addEventListener('click', async () => {
@@ -973,7 +952,7 @@
             
             await selectSheikh(targetSheikh);
 
-            // تفعيل إرشاد الراديو (إذا لم يتم استكشافه من قبل)
+            // تفعيل إرشاد الراديو (إذا لم يتم استكشافه من قبل بالضغط عليه)
             if (!localStorage.getItem('radioDiscovered')) {
                 setTimeout(() => {
                     document.getElementById('radio-tooltip').classList.add('show');
