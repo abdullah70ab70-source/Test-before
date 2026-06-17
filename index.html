@@ -110,6 +110,12 @@
         .top-btn svg { width: 18px; height: 18px; }
         .email-btn:hover, .email-btn:active { color: #3b82f6 !important; border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.08) !important; }
         
+        /* تأثير الذبذبات لأيقونة الراديو */
+        .radio-active { color: var(--accent-gold) !important; border-color: var(--accent-gold) !important; background: var(--glass-active) !important; box-shadow: 0 0 12px rgba(197, 160, 89, 0.4); }
+        @keyframes wave-fade { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .radio-active .wave-inner { animation: wave-fade 1.5s infinite ease-in-out; }
+        .radio-active .wave-outer { animation: wave-fade 1.5s infinite ease-in-out; animation-delay: 0.3s; }
+
         header { text-align: center; padding-bottom: 20px; }
         .header-img { height: 85px; width: 85px; border-radius: 50%; border: 2px solid var(--accent-gold); box-shadow: 0 4px 20px var(--shadow-intensity); object-fit: cover; margin-bottom: 10px; }
         header h1 { font-size: 1.25rem; font-weight: 300; }
@@ -248,11 +254,12 @@
                       <line x1="14" y1="17" x2="20" y2="17"></line>
                     </svg>
                 </button>
-                <!-- زر إذاعة القرآن الكريم -->
-                <button class="top-btn" onclick="playRadio()" title="إذاعة القرآن الكريم">
+                <!-- زر إذاعة القرآن الكريم بذبذبات مفصولة للأنيميشن -->
+                <button class="top-btn" id="radio-btn" onclick="playRadio()" title="إذاعة القرآن الكريم">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="2"></circle>
-                        <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path>
+                        <path class="wave-inner" d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"></path>
+                        <path class="wave-outer" d="M19.07 4.93a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path>
                     </svg>
                 </button>
             </div>
@@ -513,7 +520,17 @@
             const statusIcon = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play);
             document.getElementById('player-play-btn').innerHTML = statusIcon;
 
-            // تحديث السور (لا شيء مفعل إذا كان الراديو يعمل)
+            // تحديث أيقونة الراديو العلوية
+            const radioBtn = document.getElementById('radio-btn');
+            if (radioBtn) {
+                if (playingSurahId === 'radio' && isPlaying && !isBuffering) {
+                    radioBtn.classList.add('radio-active');
+                } else {
+                    radioBtn.classList.remove('radio-active');
+                }
+            }
+
+            // تحديث السور
             document.querySelectorAll('.surah-row').forEach(row => {
                 const sId = parseInt(row.getAttribute('data-id'));
                 const playBtn = row.querySelector('.play-cell');
@@ -724,6 +741,13 @@
             if (audioInstance.paused && audioInstance.src) {
                 isBuffering = true;
                 syncUIWithAudioState();
+                
+                // إعادة تحميل البث المباشر لضمان أنه "مباشر" وليس من نقطة التوقف
+                if (playingSurahId === 'radio') {
+                    audioInstance.src = radioUrl;
+                    audioInstance.load();
+                }
+                
                 audioInstance.play().catch(e => console.log(e));
             } else {
                 audioInstance.pause(); 
@@ -883,13 +907,19 @@
             // إخفاء الشاشة الترحيبية بعد انتهاء جلب البيانات
             hideSplashScreen();
 
-            // إظهار تنبيه الاستئناف إذا كان هناك سورة/راديو محفوظ من قبل
+            // إظهار تنبيه الاستئناف فقط للسور المحفوظة (واستثناء الراديو تماماً من هذه الرسالة)
             if(savedState && savedState.surah) {
                 if (savedState.surah === 'radio') {
-                    document.getElementById('resume-text').innerText = currentLang === 'ar' ? `هل تود إكمال الاستماع لإذاعة القرآن الكريم؟` : `Resume listening to Quran Radio?`;
-                    document.getElementById('resume-banner').classList.add('show');
-                    window.resumeData = { id: 'radio', url: radioUrl };
-                    setTimeout(() => closeResumeBanner(), 15000);
+                    // إذا كان الراديو هو آخر ما تم تشغيله، نقوم بضبط المشغل بصمت بدون رسالة إزعاج
+                    audioInstance.src = radioUrl;
+                    document.getElementById('global-player').style.display = 'block';
+                    document.getElementById('player-track-title').innerText = translations[currentLang].radioTitle;
+                    document.getElementById('progress-bar-fill').style.width = '100%';
+                    document.getElementById('progress-thumb').style.display = 'none';
+                    document.getElementById('time-separator').style.display = 'none';
+                    document.getElementById('curr-time').innerText = "";
+                    document.getElementById('total-time').innerText = translations[currentLang].live;
+                    syncUIWithAudioState();
                 } else {
                     const sData = activeSurahsData.find(s => s.id === savedState.surah);
                     if(sData && audioInstance.src === "") {
