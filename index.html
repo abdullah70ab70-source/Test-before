@@ -183,12 +183,12 @@
         .playing-badge::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-gold); border-radius: 50%; z-index: -1; animation: pulse-ring 1.5s infinite; }
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
-        /* الختمات */
+        /* الختمات - تم تصغير الحجم والخط هنا */
         .edition-dropdown-wrapper { position: relative; margin: 0px 5px 25px 5px; z-index: 10; }
         .edition-list-wrapper { width: 100%; }
-        .edition-list { display: flex; gap: 10px; overflow-x: auto; padding: 2px 5px 5px 5px; scrollbar-width: none; }
+        .edition-list { display: flex; gap: 8px; overflow-x: auto; padding: 2px 5px 5px 5px; scrollbar-width: none; }
         .edition-list::-webkit-scrollbar { display: none; }
-        .edition-pill { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg-mid); border: 1px solid var(--glass-border); padding: 5px 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; white-space: nowrap; box-shadow: 0 3px 8px var(--shadow-intensity); }
+        .edition-pill { display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--bg-mid); border: 1px solid var(--glass-border); padding: 4px 12px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; white-space: nowrap; box-shadow: 0 2px 6px var(--shadow-intensity); }
         .edition-pill:hover { border-color: var(--accent-gold); color: var(--text-main); }
         .edition-pill.active { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); transform: translateY(-2px); }
         
@@ -428,7 +428,7 @@
             { id: "basit", nameAr: "عبد الباسط عبد الصمد", nameEn: "Abdul Basit Abdul Samad", image: "basit.jpg" }
         ];
 
-        // تم إضافة الختمات المجودة الجديدة للمشايخ الأربعة
+        // تم إضافة وتحديث الختمات لجميع القراء حسب الترتيب الجديد
         const editionsConfig = {
             "husary": { 
                 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "husary_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 
@@ -440,7 +440,8 @@
             "minshawi": { 
                 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "minshawi_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 
                 2: { pillAr: "الختمة الثانية", pillEn: "2nd Khatma", file: "minshawi_2.json", descAr: "الختمة الثانية (المفقودة)", descEn: "The Second Khatma (Lost)" },
-                3: { pillAr: "المجود", pillEn: "Mujawwad", file: "minshawi_3.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
+                3: { pillAr: "المعلم", pillEn: "Mu'allim", file: "minshawi_3.json", descAr: "المصحف المعلم", descEn: "Al-Mushaf Al-Mu'allim" },
+                4: { pillAr: "المجود", pillEn: "Mujawwad", file: "minshawi_4.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
             },
             "mustafa": { 
                 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "mustafa_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" },
@@ -452,7 +453,8 @@
             },
             "basit": { 
                 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "basit_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" },
-                2: { pillAr: "المجود", pillEn: "Mujawwad", file: "basit_2.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
+                2: { pillAr: "ورش", pillEn: "Warsh", file: "basit_2.json", descAr: "رواية ورش عن نافع", descEn: "Warsh A'n Nafi'" },
+                3: { pillAr: "المجود", pillEn: "Mujawwad", file: "basit_3.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
             }
         };
 
