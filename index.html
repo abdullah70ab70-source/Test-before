@@ -177,7 +177,7 @@
         .playing-badge::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-gold); border-radius: 50%; z-index: -1; animation: pulse-ring 1.5s infinite; }
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
-        /* الختمات - تم تصغير الحجم والخط هنا */
+        /* الختمات */
         .edition-dropdown-wrapper { position: relative; margin: 0px 5px 15px 5px; z-index: 10; }
         .edition-list-wrapper { width: 100%; }
         .edition-list { display: flex; gap: 8px; overflow-x: auto; padding: 2px 5px 5px 5px; scrollbar-width: none; }
@@ -500,11 +500,12 @@
         let playbackMode = 'autonext'; // 'autonext', 'loop', 'off'
         let playbackMenuOpen = false;
         
-        // متغيرات البحث والمؤقت والمفضلات
+        // متغيرات البحث والمفضلات (تم تغيير اسم المتغير المحلي لتجنب المشاكل مع القديم)
         let currentSearchQuery = "";
         let showOnlyFavs = false;
-        let favorites = JSON.parse(localStorage.getItem('egyquran_favs')) || [];
+        let favorites = JSON.parse(localStorage.getItem('egyquran_favs_v3')) || [];
         
+        // متغيرات المؤقت
         let timerMenuOpen = false;
         let sleepTimerObj = null;
         let sleepInterval = null;
@@ -566,16 +567,37 @@
             renderSurahsList();
         }
 
-        function toggleFavorite(id, event) {
+        // دالة إضافة وحذف المفضلة للقارئ الحالي
+        function toggleFavorite(id, nameAr, url, event) {
             if(event) event.stopPropagation();
-            const idx = favorites.indexOf(id);
+            const uniqueId = `${currentSheikhId}_${currentEdition}_${id}`;
+            const idx = favorites.findIndex(f => `${f.sheikhId}_${f.editionId}_${f.surahId}` === uniqueId);
+            
             if(idx > -1) {
                 favorites.splice(idx, 1);
             } else {
-                favorites.push(id);
+                favorites.push({
+                    surahId: id,
+                    sheikhId: currentSheikhId,
+                    editionId: currentEdition,
+                    nameAr: nameAr,
+                    url: url
+                });
             }
-            localStorage.setItem('egyquran_favs', JSON.stringify(favorites));
+            localStorage.setItem('egyquran_favs_v3', JSON.stringify(favorites));
             renderSurahsList(); 
+        }
+
+        // دالة لحذف المفضلة وأنت داخل صفحة المفضلات المجمعة
+        function toggleFavoriteGlobal(surahId, sheikhId, editionId, event) {
+            if(event) event.stopPropagation();
+            const uniqueId = `${sheikhId}_${editionId}_${surahId}`;
+            const idx = favorites.findIndex(f => `${f.sheikhId}_${f.editionId}_${f.surahId}` === uniqueId);
+            if(idx > -1) {
+                favorites.splice(idx, 1);
+                localStorage.setItem('egyquran_favs_v3', JSON.stringify(favorites));
+                renderSurahsList();
+            }
         }
 
         // --- دوال مؤقت النوم ---
@@ -731,13 +753,22 @@
                 }
             }
 
-            // تحديث السور
+            // تحديث السور (يعمل مع القائمة العادية وقائمة المفضلات المجمعة بفضل data-sheikh)
             document.querySelectorAll('.surah-row').forEach(row => {
                 const sId = parseInt(row.getAttribute('data-id'));
+                const rowSheikh = row.getAttribute('data-sheikh') || currentSheikhId;
+                const rowEdition = parseInt(row.getAttribute('data-edition')) || currentEdition;
+                
                 const playBtn = row.querySelector('.play-cell');
-                const isCurrentActive = (sId === playingSurahId && playingSurahId !== 'radio' && currentSheikhId === playingSheikhId && currentEdition === playingEditionId);
-                if (isCurrentActive) { row.classList.add('active-row'); playBtn.innerHTML = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play); } 
-                else { row.classList.remove('active-row'); playBtn.innerHTML = icons.play; }
+                const isCurrentActive = (sId === playingSurahId && playingSurahId !== 'radio' && rowSheikh === playingSheikhId && rowEdition == playingEditionId);
+                
+                if (isCurrentActive) { 
+                    row.classList.add('active-row'); 
+                    playBtn.innerHTML = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play); 
+                } else { 
+                    row.classList.remove('active-row'); 
+                    playBtn.innerHTML = icons.play; 
+                }
             });
 
             // تحديث القراء
@@ -789,48 +820,96 @@
         }
 
         function renderSurahsList() {
-            // إضافة فلتر البحث والمفضلات
-            const filteredSurahs = activeSurahsData.filter(s => {
-                let matchesSearch = true;
-                if(currentSearchQuery) {
-                    const nameAr = s.name;
-                    const nameEn = surahNamesEn[s.id].toLowerCase();
-                    matchesSearch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || s.id.toString() === currentSearchQuery;
-                }
-                let matchesFav = true;
-                if(showOnlyFavs) {
-                    matchesFav = favorites.includes(s.id);
-                }
-                return matchesSearch && matchesFav;
-            });
-
             const emptyState = document.getElementById('empty-state');
             
-            if (filteredSurahs.length === 0) {
-                emptyState.style.display = 'block';
-                emptyState.innerText = currentSearchQuery ? translations[currentLang].emptySearch : translations[currentLang].emptyFavs;
-                document.getElementById('main-surah-list').innerHTML = '';
-            } else {
-                emptyState.style.display = 'none';
-                document.getElementById('main-surah-list').innerHTML = filteredSurahs.map(s => {
-                    const isFav = favorites.includes(s.id);
-                    return `<div class="surah-row" data-id="${s.id}">
-                                <div class="surah-info"><span class="surah-number">${String(s.id).padStart(3, '0')}</span><span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(s.id, s.name)}</span></div>
-                                <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
-                                    <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
-                                    <button class="surah-action-btn fav-btn ${isFav ? 'active-fav' : ''}" onclick="toggleFavorite(${s.id}, event)" title="${translations[currentLang].favTooltip}">${icons.heart}</button>
-                                    <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}')" title="${translations[currentLang].downloadTooltip}">${icons.download}</button>
-                                </div>
-                            </div>`;
-                }).join('');
+            // في حالة تفعيل المفضلات (يظهر جميع المفضلات من جميع القراء)
+            if (showOnlyFavs) {
+                const filteredFavs = favorites.filter(f => {
+                    let matchesSearch = true;
+                    if(currentSearchQuery) {
+                        const nameAr = f.nameAr;
+                        const nameEn = surahNamesEn[f.surahId].toLowerCase();
+                        matchesSearch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || f.surahId.toString() === currentSearchQuery;
+                    }
+                    return matchesSearch;
+                });
+                
+                if (filteredFavs.length === 0) {
+                    emptyState.style.display = 'block';
+                    emptyState.innerText = currentSearchQuery ? translations[currentLang].emptySearch : translations[currentLang].emptyFavs;
+                    document.getElementById('main-surah-list').innerHTML = '';
+                } else {
+                    emptyState.style.display = 'none';
+                    document.getElementById('main-surah-list').innerHTML = filteredFavs.map(f => {
+                        const sheikhData = recitersList.find(r => r.id === f.sheikhId);
+                        const edData = editionsConfig[f.sheikhId][f.editionId];
+                        const sheikhName = currentLang === 'ar' ? sheikhData.nameAr : sheikhData.nameEn;
+                        const edName = currentLang === 'ar' ? edData.pillAr : edData.pillEn;
+                        
+                        return `<div class="surah-row" data-id="${f.surahId}" data-sheikh="${f.sheikhId}" data-edition="${f.editionId}">
+                                    <div class="surah-info">
+                                        <span class="surah-number">${String(f.surahId).padStart(3, '0')}</span>
+                                        <div style="display:flex; flex-direction:column; gap:2px;">
+                                            <span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(f.surahId, f.nameAr)}</span>
+                                            <span style="font-size:0.6rem; color:var(--text-muted); font-weight:700;">${sheikhName} • ${edName}</span>
+                                        </div>
+                                    </div>
+                                    <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
+                                        <button class="surah-action-btn play-cell" onclick="playFavSurah(${f.surahId}, '${f.sheikhId}', ${f.editionId}, '${f.url}', '${f.nameAr}')">${icons.play}</button>
+                                        <button class="surah-action-btn fav-btn active-fav" onclick="toggleFavoriteGlobal(${f.surahId}, '${f.sheikhId}', ${f.editionId}, event)" title="${translations[currentLang].favTooltip}">${icons.heart}</button>
+                                        <button class="surah-action-btn" onclick="startDownload(${f.surahId}, '${f.url}', '${f.nameAr}')" title="${translations[currentLang].downloadTooltip}">${icons.download}</button>
+                                    </div>
+                                </div>`;
+                    }).join('');
+                }
+            } 
+            // الوضع الطبيعي
+            else {
+                const filteredSurahs = activeSurahsData.filter(s => {
+                    let matchesSearch = true;
+                    if(currentSearchQuery) {
+                        const nameAr = s.name;
+                        const nameEn = surahNamesEn[s.id].toLowerCase();
+                        matchesSearch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || s.id.toString() === currentSearchQuery;
+                    }
+                    return matchesSearch;
+                });
+
+                if (filteredSurahs.length === 0) {
+                    emptyState.style.display = 'block';
+                    emptyState.innerText = translations[currentLang].emptySearch;
+                    document.getElementById('main-surah-list').innerHTML = '';
+                } else {
+                    emptyState.style.display = 'none';
+                    document.getElementById('main-surah-list').innerHTML = filteredSurahs.map(s => {
+                        const uniqueId = `${currentSheikhId}_${currentEdition}_${s.id}`;
+                        const isFav = favorites.some(f => `${f.sheikhId}_${f.editionId}_${f.surahId}` === uniqueId);
+                        
+                        return `<div class="surah-row" data-id="${s.id}">
+                                    <div class="surah-info"><span class="surah-number">${String(s.id).padStart(3, '0')}</span><span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(s.id, s.name)}</span></div>
+                                    <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
+                                        <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
+                                        <button class="surah-action-btn fav-btn ${isFav ? 'active-fav' : ''}" onclick="toggleFavorite(${s.id}, '${s.name}', '${s.url}', event)" title="${translations[currentLang].favTooltip}">${icons.heart}</button>
+                                        <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}', '${s.name}')" title="${translations[currentLang].downloadTooltip}">${icons.download}</button>
+                                    </div>
+                                </div>`;
+                    }).join('');
+                }
             }
             syncUIWithAudioState();
         }
 
         const dlModal = document.getElementById('download-modal'), dlFill = document.getElementById('dl-progress-fill'), dlPct = document.getElementById('dl-modal-pct'), dlTitle = document.getElementById('dl-modal-title');
-        async function startDownload(id, url) {
+        
+        async function startDownload(id, url, overrideName) {
             if (activeDownloads[id]) return; activeDownloads[id] = true;
-            const sData = activeSurahsData.find(s => s.id === id); const sName = getSurahName(id, sData.name);
+            let rawName = overrideName;
+            if(!rawName) {
+                 const sData = activeSurahsData.find(s => s.id === id);
+                 if(sData) rawName = sData.name;
+            }
+            const sName = getSurahName(id, rawName || "");
+            
             dlModal.style.display = 'flex'; dlFill.style.width = '0%'; dlPct.innerText = '0%'; dlTitle.innerText = `${translations[currentLang].downloading} ${sName}...`;
             try {
                 const response = await fetch(url, { mode: 'cors' });
@@ -857,6 +936,12 @@
         function finishDownloadUI(id) { dlTitle.innerText = translations[currentLang].downloadComplete; dlFill.style.width = '100%'; dlPct.innerText = '100%'; setTimeout(() => { dlModal.style.display = 'none'; delete activeDownloads[id]; }, 1500); }
 
         async function selectSheikh(id) {
+            // إغلاق المفضلات تلقائياً عند اختيار أي قارئ
+            if(showOnlyFavs) {
+                showOnlyFavs = false;
+                document.getElementById('fav-filter-btn').classList.remove('active');
+            }
+            
             currentSheikhId = id;
             if (id === playingSheikhId && playingEditionId && editionsConfig[id][playingEditionId]) currentEdition = playingEditionId; else currentEdition = savedReciterEditions[id] || 1;
             const s = recitersList.find(r => r.id === id);
@@ -876,15 +961,16 @@
             }
         }
 
-        function renderEditionDropdown() {
-            const configs = editionsConfig[currentSheikhId]; const keys = Object.keys(configs);
-            const pills = keys.map(key => `<div class="edition-pill ${currentEdition == key ? 'active' : ''}" data-key="${key}" onclick="selectEditionDropdown(${key}, event)">${currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn}</div>`).join('');
-            document.getElementById('edition-dropdown-wrapper').innerHTML = `<div class="edition-list-wrapper"><div class="edition-list">${pills}</div></div>`;
-            syncUIWithAudioState(); 
-        }
-
         async function selectEditionDropdown(num, event) {
-            if(event) event.stopPropagation(); if(currentEdition == num) return; 
+            if(event) event.stopPropagation(); 
+            if(currentEdition == num && !showOnlyFavs) return; 
+            
+            // إغلاق المفضلات تلقائياً عند اختيار أي ختمة
+            if(showOnlyFavs) {
+                showOnlyFavs = false;
+                document.getElementById('fav-filter-btn').classList.remove('active');
+            }
+            
             currentEdition = num; savedReciterEditions[currentSheikhId] = num; 
             document.getElementById('header-subtitle').innerText = currentLang === 'ar' ? editionsConfig[currentSheikhId][num].descAr : editionsConfig[currentSheikhId][num].descEn;
             renderEditionDropdown(); await loadEditionData(currentSheikhId, num);
@@ -950,7 +1036,13 @@
             audioInstance.play().catch(e => console.log(e));
             
             localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: playingSheikhId, edition: playingEditionId, surah: playingSurahId }));
-            const sData = activeSurahsData.find(s => s.id === id); const sName = getSurahName(id, sData.name);
+            
+            // التأكد من توفر بيانات السورة (في حالة لم يتم تحميلها بعد)
+            let rawName = surahNamesEn[id];
+            const sData = activeSurahsData.find(s => s.id === id);
+            if (sData) rawName = sData.name;
+            
+            const sName = getSurahName(id, rawName);
             const sheikhObj = recitersList.find(r => r.id === currentSheikhId);
             
             document.getElementById('global-player').style.display = 'block'; 
@@ -967,6 +1059,26 @@
                 navigator.mediaSession.setActionHandler('previoustrack', () => playPrevious()); navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
                 navigator.mediaSession.setActionHandler('seekto', (details) => { audioInstance.currentTime = details.seekTime; });
             }
+        }
+
+        // دالة مخصصة لتشغيل السور من داخل قائمة المفضلات بسلاسة
+        async function playFavSurah(surahId, sheikhId, editionId, url, nameAr) {
+            if(currentSheikhId !== sheikhId || currentEdition !== editionId) {
+                 // ضبط التطبيق بالكامل في الخلفية على هذا القارئ والختمة لتعمل أزرار التالي/السابق
+                 currentSheikhId = sheikhId;
+                 currentEdition = editionId;
+                 savedReciterEditions[sheikhId] = editionId;
+                 
+                 const s = recitersList.find(r => r.id === sheikhId);
+                 document.getElementById('header-avatar-img').src = s.image;
+                 document.getElementById('main-title').innerHTML = `${translations[currentLang].sheikhPrefix} <strong>${currentLang === 'ar' ? s.nameAr : s.nameEn}</strong>`;
+                 document.getElementById('header-subtitle').innerText = currentLang === 'ar' ? editionsConfig[sheikhId][editionId].descAr : editionsConfig[sheikhId][editionId].descEn;
+                 
+                 renderSheikhCarousel(); 
+                 renderEditionDropdown(); 
+                 await loadEditionData(sheikhId, editionId);
+            }
+            playSurah(surahId, url);
         }
 
         function togglePlayPause() { 
