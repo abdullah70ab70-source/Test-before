@@ -4,30 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- العنوان ووصف الموقع -->
     <title>Egy Quran - استمع وحمل القرآن الكريم بأصوات كبار القراء</title>
     <meta name="description" content="منصة Egy Quran تتيح لك الاستماع وتحميل القرآن الكريم بجودة عالية وبأصوات كبار القراء مثل الحصري، المنشاوي، عبد الباسط، مع دعم التشغيل التلقائي والتكرار.">
     <meta name="keywords" content="قرآن كريم, استماع القرآن, تحميل القرآن, مصحف كبار القراء, الحصري, المنشاوي, عبد الباسط عبد الصمد, mp3 قرآن, Egy Quran">
     <meta http-equiv="content-language" content="ar">
 
-    <!-- إرشاد عناكب البحث -->
     <link rel="canonical" href="https://egyquran.com/">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph (للمشاركة على فيسبوك، واتساب، وتليجرام) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://egyquran.com/">
     <meta property="og:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta property="og:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة بدون إعلانات مزعجة.">
     <meta property="og:image" content="https://egyquran.com/icon.png">
 
-    <!-- Twitter Cards (للمشاركة على تويتر/X) -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta name="twitter:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة.">
     <meta name="twitter:image" content="https://egyquran.com/icon.png">
 
-    <!-- البيانات المهيكلة (Schema Markup) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -53,7 +48,6 @@
     <meta name="apple-mobile-web-app-title" content="Egy Quran">
     <link rel="apple-touch-icon" href="icon.png">
 
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8Q3DV5BJF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -184,7 +178,7 @@
         .equalizer-bar { width: 2px; background: #fff; height: 10px; transform-origin: bottom; }
 
         /* الختمات - تم تصغير الحجم والخط هنا */
-        .edition-dropdown-wrapper { position: relative; margin: 0px 5px 25px 5px; z-index: 10; }
+        .edition-dropdown-wrapper { position: relative; margin: 0px 5px 15px 5px; z-index: 10; }
         .edition-list-wrapper { width: 100%; }
         .edition-list { display: flex; gap: 8px; overflow-x: auto; padding: 2px 5px 5px 5px; scrollbar-width: none; }
         .edition-list::-webkit-scrollbar { display: none; }
@@ -194,6 +188,23 @@
         
         @keyframes flash-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.4); } }
         .active-dot { display: inline-block; width: 6px; height: 6px; background: var(--accent-gold); border-radius: 50%; animation: flash-dot 1.5s infinite ease-in-out; box-shadow: 0 0 4px var(--accent-gold); flex-shrink: 0; }
+
+        /* شريط البحث والمفضلات المدمج */
+        .search-fav-bar { display: flex; gap: 10px; margin: 0 5px 25px 5px; align-items: center; }
+        .search-input-wrapper { flex: 1; position: relative; display: flex; align-items: center; }
+        .search-input-wrapper .search-icon { position: absolute; right: 14px; width: 16px; height: 16px; color: var(--text-muted); pointer-events: none; transition: 0.2s; }
+        body[dir="ltr"] .search-input-wrapper .search-icon { right: auto; left: 14px; }
+        .search-input { width: 100%; padding: 12px 38px 12px 16px; border-radius: 14px; border: 1px solid var(--glass-border); background: var(--bg-mid); color: var(--text-main); font-family: 'Cairo', sans-serif; font-size: 0.8rem; outline: none; box-shadow: 0 4px 10px var(--shadow-intensity); transition: 0.2s; }
+        body[dir="ltr"] .search-input { padding: 12px 16px 12px 38px; }
+        .search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 2px var(--glass-active); }
+        .search-input:focus + .search-icon { color: var(--accent-gold); }
+        .search-input::placeholder { color: var(--text-muted); opacity: 0.7; }
+        
+        .fav-filter-btn { width: 44px; height: 44px; border-radius: 14px; border: 1px solid var(--glass-border); background: var(--bg-mid); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow-intensity); flex-shrink: 0; }
+        .fav-filter-btn:hover { color: var(--accent-gold); border-color: var(--accent-gold); background: var(--glass-active); }
+        .fav-filter-btn.active { color: var(--bg-mid); background: var(--accent-gold); border-color: var(--accent-gold); }
+        .fav-filter-btn.active svg { fill: var(--bg-mid); stroke: var(--bg-mid); }
+        .fav-filter-btn svg { width: 20px; height: 20px; }
 
         /* قائمة السور */
         .surah-list-container { display: flex; flex-direction: column; gap: 6px; }
@@ -205,12 +216,16 @@
         .surah-actions { display: flex; align-items: center; gap: 8px; }
         .surah-action-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-light); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
         .surah-action-btn:hover { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); }
-        .surah-action-btn svg { width: 14px !important; height: 14px !important; }
+        .surah-action-btn svg { width: 14px !important; height: 14px !important; transition: 0.2s; }
         .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3); }
         .active-row .play-cell:hover { transform: scale(1.05); }
 
+        /* زر المفضلة النشط داخل السورة */
+        .surah-action-btn.fav-btn.active-fav { color: var(--accent-gold); border-color: var(--accent-gold); background: var(--glass-active); }
+        .surah-action-btn.fav-btn.active-fav svg { fill: var(--accent-gold); }
+
         /* تغيير اللون لحظياً لأزرار المشغل */
-        .icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
         .icon-btn:hover { color: var(--accent-hover); }
         .icon-btn.active-feature { color: var(--accent-gold) !important; transition: none !important; }
 
@@ -233,16 +248,20 @@
         .play-toggle-btn svg { width: 16px !important; height: 16px !important; }
         .icon-btn svg { width: 20px; height: 20px; }
 
-        /* قائمة التحكم في التشغيل */
+        /* الشارة الخاصة بمؤقت النوم */
+        .timer-badge { position: absolute; top: -5px; right: -6px; background: var(--accent-gold); color: #fff; font-size: 0.55rem; padding: 2px 4px; border-radius: 6px; font-weight: bold; display: none; pointer-events: none; }
+        .timer-badge.show { display: block; }
+
+        /* قائمة التحكم في التشغيل / المؤقت */
         .playback-menu {
             position: absolute; bottom: 100%; right: 0; margin-bottom: 10px; width: 120px;
             background: var(--bg-mid); border: 1px solid var(--glass-border); border-radius: 10px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.15); overflow: hidden;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.15); overflow: hidden; text-align: start;
             max-height: 0; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; transform: translateY(10px);
             z-index: 1010;
         }
-        .playback-menu.show { max-height: 200px; opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .playback-menu-item { padding: 8px 12px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); cursor: pointer; text-align: right; transition: 0.2s; border-bottom: 1px solid var(--glass-border); }
+        .playback-menu.show { max-height: 250px; opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .playback-menu-item { padding: 8px 12px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; border-bottom: 1px solid var(--glass-border); }
         .playback-menu-item:last-child { border-bottom: none; }
         .playback-menu-item:hover { background: var(--glass-bg); color: var(--text-main); }
         .playback-menu-item.active { background: var(--glass-active); color: var(--accent-gold); }
@@ -255,11 +274,13 @@
             z-index: 10000; text-align: center; white-space: nowrap;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        
+        /* رسالة لا توجد نتائج مفضلة */
+        .empty-state { text-align: center; padding: 30px 10px; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- رسالة تثبيت التطبيق الانزلاقية -->
     <div id="install-banner" class="install-banner">
         <img src="icon.png" alt="App Icon" class="install-icon">
         <div class="install-info">
@@ -272,7 +293,6 @@
         </button>
     </div>
 
-    <!-- رسالة استئناف الاستماع -->
     <div id="resume-banner">
         <div class="resume-text" id="resume-text">هل تود إكمال الاستماع؟</div>
         <div class="resume-actions">
@@ -281,7 +301,6 @@
         </div>
     </div>
 
-    <!-- رسالة التوست -->
     <div id="toast" class="toast"></div>
 
     <div class="container">
@@ -295,7 +314,6 @@
                     </svg>
                 </a>
                 
-                <!-- زر إذاعة القرآن الكريم مع الإرشاد (Tooltip & Badge) -->
                 <div class="radio-wrapper">
                     <button class="top-btn" id="radio-btn" onclick="playRadio()" title="إذاعة القرآن الكريم">
                         <span class="radio-badge" id="radio-badge"></span>
@@ -307,7 +325,6 @@
                     </button>
                     <div id="radio-tooltip" class="radio-tooltip">إذاعة القرآن الكريم</div>
                 </div>
-
             </div>
             <button class="top-btn" onclick="toggleLanguage()"><span id="lang-label">EN</span></button>
         </div>
@@ -320,7 +337,23 @@
 
         <div class="sheikh-selector-wrapper"><div class="sheikh-list" id="sheikh-carousel"></div></div>
         <div class="edition-dropdown-wrapper" id="edition-dropdown-wrapper"></div>
+        
+        <div class="search-fav-bar">
+            <div class="search-input-wrapper">
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن سورة (اسم أو رقم)..." onkeyup="handleSearch()">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+            <button class="fav-filter-btn" id="fav-filter-btn" onclick="toggleFavFilter()" title="المفضلات">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
+        </div>
+
         <div class="surah-list-container" id="main-surah-list"></div>
+        <div id="empty-state" class="empty-state">لا توجد سور في المفضلات حالياً</div>
     </div>
 
     <div id="download-modal" class="download-modal">
@@ -349,7 +382,15 @@
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
                 
-                <div style="width: 70px;"></div> <!-- Placeholder للحفاظ على التوسيط -->
+                <div style="position: relative; width: 70px; display: flex; justify-content: flex-start;" id="timer-wrapper">
+                    <button class="icon-btn" id="btn-sleep-timer" onclick="toggleTimerMenu(event)" title="مؤقت النوم">
+                        <span class="timer-badge" id="timer-badge"></span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </button>
+                    <div class="playback-menu" id="timer-menu" style="direction: var(--dir, rtl); left: 0; right: auto;"></div>
+                </div>
                 
                 <div style="display:flex; align-items:center; gap:16px;">
                     <button class="icon-btn" onclick="playPrevious()" title="السابق">
@@ -414,8 +455,8 @@
         ];
 
         const translations = {
-            ar: { langLabel: "EN", sheikhPrefix: "الشيخ", surahPrefix: "سورة", downloading: "جاري تحميل", downloadComplete: "تم التحميل بنجاح!", resumeBtn: "متابعة الاستماع", cancelBtn: "إلغاء", radioTitle: "إذاعة القرآن الكريم من القاهرة", live: "مباشر", installTitle: "تثبيت تطبيق Egy Quran", installDesc: "تجربة استماع أسرع وتعمل بدون إنترنت", installBtn: "تثبيت", radioTooltip: "إذاعة القرآن الكريم" },
-            en: { langLabel: "AR", sheikhPrefix: "Sheikh", surahPrefix: "Surah", downloading: "Downloading", downloadComplete: "Download Complete!", resumeBtn: "Resume Listening", cancelBtn: "Cancel", radioTitle: "Holy Quran Radio Cairo", live: "LIVE", installTitle: "Install Egy Quran App", installDesc: "Faster experience with offline support", installBtn: "Install", radioTooltip: "Holy Quran Radio" }
+            ar: { langLabel: "EN", sheikhPrefix: "الشيخ", surahPrefix: "سورة", downloading: "جاري تحميل", downloadComplete: "تم التحميل بنجاح!", resumeBtn: "متابعة الاستماع", cancelBtn: "إلغاء", radioTitle: "إذاعة القرآن الكريم من القاهرة", live: "مباشر", installTitle: "تثبيت تطبيق Egy Quran", installDesc: "تجربة استماع أسرع وتعمل بدون إنترنت", installBtn: "تثبيت", radioTooltip: "إذاعة القرآن الكريم", searchPlaceholder: "ابحث عن سورة (اسم أو رقم)...", favTooltip: "المفضلة", downloadTooltip: "تحميل", emptyFavs: "لا توجد سور في المفضلات حالياً", emptySearch: "لم يتم العثور على نتائج" },
+            en: { langLabel: "AR", sheikhPrefix: "Sheikh", surahPrefix: "Surah", downloading: "Downloading", downloadComplete: "Download Complete!", resumeBtn: "Resume Listening", cancelBtn: "Cancel", radioTitle: "Holy Quran Radio Cairo", live: "LIVE", installTitle: "Install Egy Quran App", installDesc: "Faster experience with offline support", installBtn: "Install", radioTooltip: "Holy Quran Radio", searchPlaceholder: "Search Surah (name or number)...", favTooltip: "Favorite", downloadTooltip: "Download", emptyFavs: "No favorite surahs yet", emptySearch: "No results found" }
         };
         let currentLang = 'ar';
         const radioUrl = "https://stream.radiojar.com/8s5u5tpdtwzuv";
@@ -428,34 +469,12 @@
             { id: "basit", nameAr: "عبد الباسط عبد الصمد", nameEn: "Abdul Basit Abdul Samad", image: "basit.jpg" }
         ];
 
-        // تم إضافة وتحديث الختمات لجميع القراء حسب الترتيب الجديد
         const editionsConfig = {
-            "husary": { 
-                1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "husary_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 
-                2: { pillAr: "ورش", pillEn: "Warsh", file: "husary_2.json", descAr: "رواية ورش عن نافع", descEn: "Warsh A'n Nafi'" }, 
-                3: { pillAr: "قالون", pillEn: "Qalun", file: "husary_3.json", descAr: "رواية قالون عن نافع", descEn: "Qalun A'n Nafi'" }, 
-                4: { pillAr: "الدوري", pillEn: "Al-Duri", file: "husary_4.json", descAr: "رواية الدوري عن أبي عمرو", descEn: "Al-Duri A'n Abi Amr" },
-                5: { pillAr: "المجود", pillEn: "Mujawwad", file: "husary_5.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" } 
-            },
-            "minshawi": { 
-                1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "minshawi_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 
-                2: { pillAr: "الختمة الثانية", pillEn: "2nd Khatma", file: "minshawi_2.json", descAr: "الختمة الثانية (المفقودة)", descEn: "The Second Khatma (Lost)" },
-                3: { pillAr: "المعلم", pillEn: "Mu'allim", file: "minshawi_3.json", descAr: "المصحف المعلم", descEn: "Al-Mushaf Al-Mu'allim" },
-                4: { pillAr: "المجود", pillEn: "Mujawwad", file: "minshawi_4.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
-            },
-            "mustafa": { 
-                1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "mustafa_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" },
-                2: { pillAr: "المجود", pillEn: "Mujawwad", file: "mustafa_2.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
-            },
-            "banna": { 
-                1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "banna_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" },
-                2: { pillAr: "المجود", pillEn: "Mujawwad", file: "banna_2.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
-            },
-            "basit": { 
-                1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "basit_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" },
-                2: { pillAr: "ورش", pillEn: "Warsh", file: "basit_2.json", descAr: "رواية ورش عن نافع", descEn: "Warsh A'n Nafi'" },
-                3: { pillAr: "المجود", pillEn: "Mujawwad", file: "basit_3.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" }
-            }
+            "husary": { 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "husary_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 2: { pillAr: "ورش", pillEn: "Warsh", file: "husary_2.json", descAr: "رواية ورش عن نافع", descEn: "Warsh A'n Nafi'" }, 3: { pillAr: "قالون", pillEn: "Qalun", file: "husary_3.json", descAr: "رواية قالون عن نافع", descEn: "Qalun A'n Nafi'" }, 4: { pillAr: "الدوري", pillEn: "Al-Duri", file: "husary_4.json", descAr: "رواية الدوري عن أبي عمرو", descEn: "Al-Duri A'n Abi Amr" }, 5: { pillAr: "المجود", pillEn: "Mujawwad", file: "husary_5.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" } },
+            "minshawi": { 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "minshawi_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 2: { pillAr: "الختمة الثانية", pillEn: "2nd Khatma", file: "minshawi_2.json", descAr: "الختمة الثانية (المفقودة)", descEn: "The Second Khatma (Lost)" }, 3: { pillAr: "المعلم", pillEn: "Mu'allim", file: "minshawi_3.json", descAr: "المصحف المعلم", descEn: "Al-Mushaf Al-Mu'allim" }, 4: { pillAr: "المجود", pillEn: "Mujawwad", file: "minshawi_4.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" } },
+            "mustafa": { 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "mustafa_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 2: { pillAr: "المجود", pillEn: "Mujawwad", file: "mustafa_2.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" } },
+            "banna": { 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "banna_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 2: { pillAr: "المجود", pillEn: "Mujawwad", file: "banna_2.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" } },
+            "basit": { 1: { pillAr: "حفص (الإذاعة)", pillEn: "Hafs (Radio)", file: "basit_1.json", descAr: "الإذاعة المصرية", descEn: "Egyptian Radio" }, 2: { pillAr: "ورش", pillEn: "Warsh", file: "basit_2.json", descAr: "رواية ورش عن نافع", descEn: "Warsh A'n Nafi'" }, 3: { pillAr: "المجود", pillEn: "Mujawwad", file: "basit_3.json", descAr: "التلاوة المجودة", descEn: "Mujawwad Recitation" } }
         };
 
         const icons = {
@@ -464,7 +483,8 @@
             loading: '<svg class="loading-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>',
             sun: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>',
             moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>',
-            download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
+            download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+            heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>'
         };
 
         let currentTheme = 'light', currentSheikhId = "husary", currentEdition = 1;
@@ -479,6 +499,16 @@
 
         let playbackMode = 'autonext'; // 'autonext', 'loop', 'off'
         let playbackMenuOpen = false;
+        
+        // متغيرات البحث والمؤقت والمفضلات
+        let currentSearchQuery = "";
+        let showOnlyFavs = false;
+        let favorites = JSON.parse(localStorage.getItem('egyquran_favs')) || [];
+        
+        let timerMenuOpen = false;
+        let sleepTimerObj = null;
+        let sleepInterval = null;
+        let currentTimerMins = 0;
 
         function getSurahName(id, nameAr) { return currentLang === 'ar' ? nameAr : surahNamesEn[id]; }
 
@@ -492,14 +522,17 @@
             document.getElementById('resume-btn-yes').innerText = translations[currentLang].resumeBtn;
             document.getElementById('resume-btn-no').innerText = translations[currentLang].cancelBtn;
             
-            // تحديث نصوص التثبيت والتنبيه
             document.getElementById('install-title').innerText = translations[currentLang].installTitle;
             document.getElementById('install-desc').innerText = translations[currentLang].installDesc;
             document.getElementById('install-action-btn').innerText = translations[currentLang].installBtn;
             document.getElementById('radio-tooltip').innerText = translations[currentLang].radioTooltip;
             
+            document.getElementById('search-input').placeholder = translations[currentLang].searchPlaceholder;
+            document.getElementById('fav-filter-btn').title = translations[currentLang].favTooltip;
+            
             selectSheikh(currentSheikhId);
             setPlaybackMode(playbackMode);
+            renderTimerMenu(currentTimerMins);
             
             if (playingSurahId === 'radio') {
                 document.getElementById('player-track-title').innerText = translations[currentLang].radioTitle;
@@ -516,17 +549,130 @@
             document.getElementById('theme-toggle-btn').innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
         }
 
+        // --- دوال البحث والمفضلات ---
+        function handleSearch() {
+            currentSearchQuery = document.getElementById('search-input').value.toLowerCase();
+            renderSurahsList();
+        }
+
+        function toggleFavFilter() {
+            showOnlyFavs = !showOnlyFavs;
+            const btn = document.getElementById('fav-filter-btn');
+            if(showOnlyFavs) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+            renderSurahsList();
+        }
+
+        function toggleFavorite(id, event) {
+            if(event) event.stopPropagation();
+            const idx = favorites.indexOf(id);
+            if(idx > -1) {
+                favorites.splice(idx, 1);
+            } else {
+                favorites.push(id);
+            }
+            localStorage.setItem('egyquran_favs', JSON.stringify(favorites));
+            renderSurahsList(); 
+        }
+
+        // --- دوال مؤقت النوم ---
+        function toggleTimerMenu(event) {
+            if(event) event.stopPropagation();
+            timerMenuOpen = !timerMenuOpen;
+            const menu = document.getElementById('timer-menu');
+            if (timerMenuOpen) { 
+                menu.classList.add('show'); 
+                if(playbackMenuOpen) togglePlaybackMenu(); 
+            } 
+            else { menu.classList.remove('show'); }
+        }
+
+        function setSleepTimer(minutes, event) {
+            if(event) event.stopPropagation();
+            clearTimeout(sleepTimerObj);
+            clearInterval(sleepInterval);
+            
+            currentTimerMins = minutes;
+            const badge = document.getElementById('timer-badge');
+            const btn = document.getElementById('btn-sleep-timer');
+
+            if(minutes === 0) {
+                btn.classList.remove('active-feature');
+                badge.classList.remove('show');
+                showToast(currentLang === 'ar' ? 'تم إلغاء مؤقت النوم' : 'Sleep timer canceled');
+                if (timerMenuOpen) toggleTimerMenu();
+                renderTimerMenu(0);
+                return;
+            }
+
+            btn.classList.add('active-feature');
+            badge.classList.add('show');
+            
+            let msRemaining = minutes * 60 * 1000;
+            const endTime = Date.now() + msRemaining;
+
+            const updateBadge = () => {
+                const left = Math.ceil((endTime - Date.now()) / 60000);
+                if (left <= 0) {
+                    badge.classList.remove('show');
+                    btn.classList.remove('active-feature');
+                } else {
+                    badge.innerText = left;
+                }
+            };
+            updateBadge();
+            sleepInterval = setInterval(updateBadge, 60000);
+
+            sleepTimerObj = setTimeout(() => {
+                audioInstance.pause();
+                clearInterval(sleepInterval);
+                badge.classList.remove('show');
+                btn.classList.remove('active-feature');
+                currentTimerMins = 0;
+                showToast(currentLang === 'ar' ? 'انتهى مؤقت النوم وتم إيقاف التلاوة' : 'Sleep timer ended, playback paused');
+                renderTimerMenu(0);
+            }, msRemaining);
+
+            showToast(currentLang === 'ar' ? `سيتم الإيقاف بعد ${minutes} دقيقة` : `Stopping in ${minutes} mins`);
+            renderTimerMenu(minutes);
+            if (timerMenuOpen) toggleTimerMenu();
+        }
+
+        function renderTimerMenu(activeMins = 0) {
+            const menu = document.getElementById('timer-menu');
+            const options = [
+                { val: 0, ar: 'إيقاف المؤقت', en: 'Off' },
+                { val: 15, ar: '15 دقيقة', en: '15 min' },
+                { val: 30, ar: '30 دقيقة', en: '30 min' },
+                { val: 45, ar: '45 دقيقة', en: '45 min' },
+                { val: 60, ar: '60 دقيقة', en: '60 min' }
+            ];
+            
+            menu.innerHTML = options.map(opt =>
+                `<div class="playback-menu-item ${activeMins === opt.val ? 'active' : ''}" onclick="setSleepTimer(${opt.val}, event)">
+                    ${currentLang === 'ar' ? opt.ar : opt.en}
+                </div>`
+            ).join('');
+        }
+
         // دوال التحكم في المشغل (تلقائي/تكرار/إيقاف)
         function togglePlaybackMenu(event) {
             if(event) event.stopPropagation();
             playbackMenuOpen = !playbackMenuOpen;
             const menu = document.getElementById('playback-menu');
-            if (playbackMenuOpen) { menu.classList.add('show'); } 
+            if (playbackMenuOpen) { 
+                menu.classList.add('show'); 
+                if(timerMenuOpen) toggleTimerMenu(); 
+            } 
             else { menu.classList.remove('show'); }
         }
 
         document.addEventListener('click', (e) => {
             if (playbackMenuOpen && !e.target.closest('#playback-wrapper')) togglePlaybackMenu();
+            if (timerMenuOpen && !e.target.closest('#timer-wrapper')) toggleTimerMenu();
         });
 
         function setPlaybackMode(mode, event) {
@@ -643,15 +789,41 @@
         }
 
         function renderSurahsList() {
-            document.getElementById('main-surah-list').innerHTML = activeSurahsData.map(s => {
-                return `<div class="surah-row" data-id="${s.id}">
-                            <div class="surah-info"><span class="surah-number">${String(s.id).padStart(3, '0')}</span><span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(s.id, s.name)}</span></div>
-                            <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
-                                <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
-                                <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}')" title="تحميل">${icons.download}</button>
-                            </div>
-                        </div>`;
-            }).join('');
+            // إضافة فلتر البحث والمفضلات
+            const filteredSurahs = activeSurahsData.filter(s => {
+                let matchesSearch = true;
+                if(currentSearchQuery) {
+                    const nameAr = s.name;
+                    const nameEn = surahNamesEn[s.id].toLowerCase();
+                    matchesSearch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || s.id.toString() === currentSearchQuery;
+                }
+                let matchesFav = true;
+                if(showOnlyFavs) {
+                    matchesFav = favorites.includes(s.id);
+                }
+                return matchesSearch && matchesFav;
+            });
+
+            const emptyState = document.getElementById('empty-state');
+            
+            if (filteredSurahs.length === 0) {
+                emptyState.style.display = 'block';
+                emptyState.innerText = currentSearchQuery ? translations[currentLang].emptySearch : translations[currentLang].emptyFavs;
+                document.getElementById('main-surah-list').innerHTML = '';
+            } else {
+                emptyState.style.display = 'none';
+                document.getElementById('main-surah-list').innerHTML = filteredSurahs.map(s => {
+                    const isFav = favorites.includes(s.id);
+                    return `<div class="surah-row" data-id="${s.id}">
+                                <div class="surah-info"><span class="surah-number">${String(s.id).padStart(3, '0')}</span><span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(s.id, s.name)}</span></div>
+                                <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
+                                    <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
+                                    <button class="surah-action-btn fav-btn ${isFav ? 'active-fav' : ''}" onclick="toggleFavorite(${s.id}, event)" title="${translations[currentLang].favTooltip}">${icons.heart}</button>
+                                    <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}')" title="${translations[currentLang].downloadTooltip}">${icons.download}</button>
+                                </div>
+                            </div>`;
+                }).join('');
+            }
             syncUIWithAudioState();
         }
 
@@ -718,16 +890,14 @@
             renderEditionDropdown(); await loadEditionData(currentSheikhId, num);
         }
 
-        // إخفاء تنبيه استكشاف الراديو
         function hideRadioDiscovery() {
             document.getElementById('radio-tooltip').classList.remove('show');
             document.getElementById('radio-badge').classList.remove('show');
             localStorage.setItem('radioDiscovered', 'true');
         }
 
-        // --- دالة تشغيل الراديو ---
         function playRadio() {
-            hideRadioDiscovery(); // بمجرد الضغط، يختفي الإرشاد للأبد
+            hideRadioDiscovery(); 
 
             if (playingSurahId === 'radio') { togglePlayPause(); return; }
             
@@ -738,7 +908,7 @@
             isBuffering = true; 
             
             audioInstance.src = radioUrl; 
-            audioInstance.loop = false; // الراديو لا يحتاج لتكرار
+            audioInstance.loop = false;
             audioInstance.play().catch(e => console.log(e));
             
             localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: null, edition: null, surah: 'radio' }));
@@ -746,7 +916,6 @@
             document.getElementById('global-player').style.display = 'block'; 
             document.getElementById('player-track-title').innerText = translations[currentLang].radioTitle;
             
-            // ضبط شكل شريط التقدم للراديو
             document.getElementById('progress-bar-fill').style.width = '100%';
             document.getElementById('progress-thumb').style.display = 'none';
             document.getElementById('time-separator').style.display = 'none';
@@ -764,9 +933,9 @@
                 });
                 navigator.mediaSession.setActionHandler('play', () => togglePlayPause()); 
                 navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
-                navigator.mediaSession.setActionHandler('previoustrack', null); // إيقاف أزرار التنقل
+                navigator.mediaSession.setActionHandler('previoustrack', null); 
                 navigator.mediaSession.setActionHandler('nexttrack', null);
-                navigator.mediaSession.setActionHandler('seekto', null); // منع التقديم والتأخير
+                navigator.mediaSession.setActionHandler('seekto', null); 
             }
         }
 
@@ -787,7 +956,6 @@
             document.getElementById('global-player').style.display = 'block'; 
             document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${sName}`;
             
-            // إرجاع شكل شريط التقدم العادي
             document.getElementById('progress-thumb').style.display = 'block';
             document.getElementById('time-separator').style.display = 'inline';
 
@@ -806,7 +974,6 @@
                 isBuffering = true;
                 syncUIWithAudioState();
                 
-                // إعادة تحميل البث المباشر لضمان أنه "مباشر" وليس من نقطة التوقف
                 if (playingSurahId === 'radio') {
                     audioInstance.src = radioUrl;
                     audioInstance.load();
@@ -831,7 +998,6 @@
         audioInstance.addEventListener('play', () => { isBuffering = true; syncUIWithAudioState(); });
         audioInstance.addEventListener('pause', () => { isBuffering = false; syncUIWithAudioState(); });
         
-        // معالجة خطأ الإنترنت واستمرار الدائرة
         audioInstance.addEventListener('error', () => {
             if (!navigator.onLine) {
                 isBuffering = true; 
@@ -842,7 +1008,6 @@
             showToast(currentLang === 'ar' ? "خطأ في الاتصال، يرجى التحقق من الإنترنت" : "Network error, please check connection");
         });
 
-        // محاولة إعادة التشغيل التلقائي عند عودة الإنترنت
         window.addEventListener('online', () => {
             if (isBuffering && playingSurahId && !audioInstance.paused) {
                 audioInstance.load();
@@ -867,17 +1032,14 @@
         
         audioInstance.ontimeupdate = () => {
             if (playingSurahId === 'radio') {
-                // شكل المشغل للراديو
                 document.getElementById('progress-bar-fill').style.width = '100%';
                 document.getElementById('curr-time').innerText = "";
                 document.getElementById('total-time').innerText = translations[currentLang].live;
             } else if (audioInstance.duration && !isDragging) {
-                // شكل المشغل للسور العادية
                 document.getElementById('progress-bar-fill').style.width = ((audioInstance.currentTime / audioInstance.duration) * 100) + '%';
                 document.getElementById('curr-time').innerText = formatTime(audioInstance.currentTime);
                 document.getElementById('total-time').innerText = formatTime(audioInstance.duration);
 
-                // التحميل المسبق للسور
                 if (playbackMode === 'autonext' && (audioInstance.duration - audioInstance.currentTime) < 15) {
                     const idx = activeSurahsData.findIndex(s => s.id === playingSurahId);
                     if (idx !== -1 && idx < activeSurahsData.length - 1) {
@@ -899,7 +1061,7 @@
         const progressContainer = document.getElementById('progress-container');
         
         const seek = (e) => { 
-            if (playingSurahId === 'radio') return currentSeekPct; // منع التقديم والتأخير في الراديو
+            if (playingSurahId === 'radio') return currentSeekPct; 
             const rect = progressContainer.getBoundingClientRect(); 
             let clientX = 0;
             if (e.type.includes('touch')) {
@@ -930,7 +1092,6 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // إظهار الرسالة دائما طالما التطبيق لم يثبت
             setTimeout(() => {
                 document.getElementById('install-banner').classList.add('show');
             }, 2000); 
@@ -955,6 +1116,7 @@
         (async () => {
             document.getElementById('theme-toggle-btn').innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
             setPlaybackMode('autonext'); 
+            renderTimerMenu(0); 
             
             let targetSheikh = 'husary'; 
             const savedState = JSON.parse(localStorage.getItem('lastPlayedQuran'));
@@ -971,18 +1133,15 @@
             
             await selectSheikh(targetSheikh);
 
-            // تفعيل إرشاد الراديو (إذا لم يتم استكشافه من قبل بالضغط عليه)
             if (!localStorage.getItem('radioDiscovered')) {
                 setTimeout(() => {
                     document.getElementById('radio-tooltip').classList.add('show');
                     document.getElementById('radio-badge').classList.add('show');
-                }, 2500); // يظهر بعد فتح التطبيق بـ 2.5 ثانية
+                }, 2500); 
             }
 
-            // إظهار تنبيه الاستئناف فقط للسور المحفوظة (واستثناء الراديو تماماً من هذه الرسالة)
             if(savedState && savedState.surah) {
                 if (savedState.surah === 'radio') {
-                    // إذا كان الراديو هو آخر ما تم تشغيله، نقوم بضبط المشغل بصمت بدون رسالة إزعاج
                     audioInstance.src = radioUrl;
                     document.getElementById('global-player').style.display = 'block';
                     document.getElementById('player-track-title').innerText = translations[currentLang].radioTitle;
