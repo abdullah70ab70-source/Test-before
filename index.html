@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- العنوان ووصف الموقع -->
     <title>Egy Quran - استمع وحمل القرآن الكريم بأصوات كبار القراء</title>
     <meta name="description" content="منصة Egy Quran تتيح لك الاستماع وتحميل القرآن الكريم بجودة عالية وبأصوات كبار القراء مثل الحصري، المنشاوي، عبد الباسط، مع دعم التشغيل التلقائي والتكرار.">
     <meta name="keywords" content="قرآن كريم, استماع القرآن, تحميل القرآن, مصحف كبار القراء, الحصري, المنشاوي, عبد الباسط عبد الصمد, mp3 قرآن, Egy Quran">
     <meta http-equiv="content-language" content="ar">
 
+    <!-- إرشاد عناكب البحث -->
     <link rel="canonical" href="https://egyquran.com/">
     <meta name="robots" content="index, follow">
 
+    <!-- Open Graph (للمشاركة على فيسبوك، واتساب، وتليجرام) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://egyquran.com/">
     <meta property="og:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta property="og:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة بدون إعلانات مزعجة.">
     <meta property="og:image" content="https://egyquran.com/icon.png">
 
+    <!-- Twitter Cards (للمشاركة على تويتر/X) -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta name="twitter:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة.">
     <meta name="twitter:image" content="https://egyquran.com/icon.png">
 
+    <!-- البيانات المهيكلة (Schema Markup) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -48,6 +53,7 @@
     <meta name="apple-mobile-web-app-title" content="Egy Quran">
     <link rel="apple-touch-icon" href="icon.png">
 
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8Q3DV5BJF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -215,9 +221,12 @@
         .surah-number { font-size: 0.75rem; color: var(--accent-gold); font-weight: 700; min-width: 24px; }
         .surah-name { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
         .surah-actions { display: flex; align-items: center; gap: 8px; }
-        .surah-action-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-light); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        
+        /* تعديل حجم الأيقونات الأمامية لكل سورة لدرجة أصغر وأنعم */
+        .surah-action-btn { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-light); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
         .surah-action-btn:hover { background: var(--glass-active); color: var(--accent-gold); border-color: var(--accent-gold); }
-        .surah-action-btn svg { width: 14px !important; height: 14px !important; transition: 0.2s; }
+        .surah-action-btn svg { width: 12px !important; height: 12px !important; transition: 0.2s; }
+        
         .active-row .play-cell { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3); }
         .active-row .play-cell:hover { transform: scale(1.05); }
 
@@ -336,6 +345,7 @@
         <div class="sheikh-selector-wrapper"><div class="sheikh-list" id="sheikh-carousel"></div></div>
         <div class="edition-dropdown-wrapper" id="edition-dropdown-wrapper"></div>
         
+        <!-- شريط البحث والمفضلات المدمج أسفل الختمات (أنحف وأكثر أناقة) -->
         <div class="search-fav-bar">
             <div class="search-input-wrapper">
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن سورة (اسم أو رقم)..." onkeyup="handleSearch()">
@@ -1060,7 +1070,6 @@
         function playSurah(id, url, overrideName) {
             if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
             
-            // الابتكار: إنهاء البحث بمجرد تشغيل السورة بذكاء وبدون تقطيع
             let searchWasActive = false;
             if (currentSearchQuery !== "") {
                 document.getElementById('search-input').value = "";
