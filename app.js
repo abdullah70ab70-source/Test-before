@@ -90,33 +90,32 @@ const icons = {
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
 };
 
-// تهيئة المشغل وإضافة خاصية السماح بالتعديل على الصوتيات الخارجية
+// تهيئة المشغل
 let audioInstance = new Audio();
 audioInstance.crossOrigin = "anonymous"; 
 
 // متغيرات تضخيم الصوت
 let audioCtx, gainNode, audioSource;
 
-// دالة لتهيئة مُضخم الصوت (Web Audio API)
+// دالة تهيئة مضخم الصوت مع التعامل مع الأخطاء وإجبار فتح المسار
 function initAudioBoost() {
-    if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-            audioCtx = new AudioContext();
-            audioSource = audioCtx.createMediaElementSource(audioInstance);
-            gainNode = audioCtx.createGain();
-            
-            // هنا يتم مضاعفة الصوت! 1 = 100%، 2 = 200%، 2.5 = 250%، 3 = 300%.
-            // جعلناه 2.5 كقيمة افتراضية عالية
-            gainNode.gain.value = 2.5; 
-            
-            audioSource.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+    try {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                audioCtx = new AudioContext();
+                audioSource = audioCtx.createMediaElementSource(audioInstance);
+                gainNode = audioCtx.createGain();
+                gainNode.gain.value = 2.5; // قوة تضخيم الصوت (250%)
+                audioSource.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+            }
         }
-    }
-    // إعادة تفعيل السياق الصوتي إذا كان معلقاً بسبب سياسات المتصفح
-    if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(e => console.log("Context Resume Error:", e));
+        }
+    } catch (e) {
+        console.log("Audio API Init Error:", e);
     }
 }
 
@@ -467,7 +466,7 @@ function hideRadioDiscovery() {
 
 function playRadio() {
     hideRadioDiscovery();
-    initAudioBoost(); // تشغيل مضخم الصوت
+    initAudioBoost(); 
 
     if (playingSurahId === 'radio') { togglePlayPause(); return; }
     
@@ -477,9 +476,17 @@ function playRadio() {
     
     isBuffering = true; 
     
+    // إصلاح مشكلة المتصفح: تفريغ المسار القديم وإجباره على التحديث
+    audioInstance.pause();
     audioInstance.src = radioUrl; 
     audioInstance.loop = false;
-    audioInstance.play().catch(e => console.log(e));
+    audioInstance.load(); 
+    
+    audioInstance.play().catch(e => {
+        console.log("Audio Play Error:", e);
+        isBuffering = false;
+        syncUIWithAudioState();
+    });
     
     localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: null, edition: null, surah: 'radio' }));
     
@@ -520,7 +527,7 @@ function playRadio() {
 }
 
 function playSurah(id, url) {
-    initAudioBoost(); // تشغيل مضخم الصوت
+    initAudioBoost(); 
     if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
     
     isRadioHeaderActive = false;
@@ -528,9 +535,17 @@ function playSurah(id, url) {
     
     isBuffering = true; 
     
+    // إصلاح مشكلة المتصفح: تفريغ المسار القديم وإجباره على التحديث
+    audioInstance.pause();
     audioInstance.src = url; 
     audioInstance.loop = (playbackMode === 'loop');
-    audioInstance.play().catch(e => console.log(e));
+    audioInstance.load();
+    
+    audioInstance.play().catch(e => {
+        console.log("Audio Play Error:", e);
+        isBuffering = false;
+        syncUIWithAudioState();
+    });
     
     localStorage.setItem('lastPlayedQuran', JSON.stringify({ sheikh: playingSheikhId, edition: playingEditionId, surah: playingSurahId }));
     const sData = activeSurahsData.find(s => s.id === id); const sName = getSurahName(id, sData.name);
@@ -554,17 +569,23 @@ function playSurah(id, url) {
 }
 
 function togglePlayPause() { 
-    initAudioBoost(); // تأكيد تشغيل مضخم الصوت عند بدء التشغيل
+    initAudioBoost(); 
     if (audioInstance.paused && audioInstance.src) {
         isBuffering = true;
         syncUIWithAudioState();
         
+        // إعادة تحميل البث المباشر
         if (playingSurahId === 'radio') {
+            audioInstance.pause();
             audioInstance.src = radioUrl;
             audioInstance.load();
         }
         
-        audioInstance.play().catch(e => console.log(e));
+        audioInstance.play().catch(e => {
+            console.log("Audio Play Error:", e);
+            isBuffering = false;
+            syncUIWithAudioState();
+        });
     } else {
         audioInstance.pause(); 
     }
