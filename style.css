@@ -93,11 +93,41 @@ body.dark-theme .radio-badge { border-color: var(--bg-dark); }
     100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } 
 }
 
+/* الرأس واسم القارئ */
 header { text-align: center; padding-bottom: 20px; }
 .header-img { height: 85px; width: 85px; border-radius: 50%; border: 2px solid var(--accent-gold); box-shadow: 0 4px 20px var(--shadow-intensity); object-fit: cover; margin-bottom: 10px; }
-header h1 { font-size: 1.25rem; font-weight: 300; }
+header h1 { font-size: 1.15rem; font-weight: 300; margin-top: 5px; } /* تم التصغير درجة */
 header h1 strong { font-weight: 700; color: var(--accent-gold); }
 header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+/* موجات الصوت أسفل القارئ (المعادل الصوتي) */
+.header-equalizer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    height: 18px;
+    margin-top: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.header-equalizer.playing {
+    opacity: 1;
+    visibility: visible;
+}
+.header-eq-bar {
+    width: 3px;
+    background: var(--accent-gold);
+    border-radius: 3px;
+    transform-origin: bottom;
+    box-shadow: 0 0 8px rgba(197, 160, 89, 0.4);
+}
+.header-equalizer.playing .header-eq-bar:nth-child(1) { animation: equalize 0.7s infinite alternate ease-in-out; }
+.header-equalizer.playing .header-eq-bar:nth-child(2) { animation: equalize 0.5s infinite alternate ease-in-out 0.2s; }
+.header-equalizer.playing .header-eq-bar:nth-child(3) { animation: equalize 0.8s infinite alternate ease-in-out 0.1s; }
+.header-equalizer.playing .header-eq-bar:nth-child(4) { animation: equalize 0.6s infinite alternate ease-in-out 0.3s; }
+.header-equalizer.playing .header-eq-bar:nth-child(5) { animation: equalize 0.7s infinite alternate ease-in-out 0.15s; }
 
 /* القراء */
 .sheikh-selector-wrapper { width: 100%; margin: 10px 0 5px 0; }
