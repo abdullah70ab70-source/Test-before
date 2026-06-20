@@ -121,10 +121,6 @@ function toggleLanguage() {
     document.getElementById('install-desc').innerText = translations[currentLang].installDesc;
     document.getElementById('install-action-btn').innerText = translations[currentLang].installBtn;
     document.getElementById('radio-tooltip').innerText = translations[currentLang].radioTooltip;
-
-    // تحديث نص زر الخروج من الاستماع الهادئ
-    const exitBtn = document.getElementById('exit-focus-btn');
-    if (exitBtn) exitBtn.innerText = currentLang === 'ar' ? 'إنهاء الاستماع الهادئ' : 'Exit Focus Mode';
     
     const wasRadioHeader = isRadioHeaderActive;
     selectSheikh(currentSheikhId);
@@ -642,7 +638,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navi
     
     // قراءة الرابط للبحث عن قارئ محدد أو الإذاعة
     const urlParams = new URLSearchParams(window.location.search);
-    const reciterFromUrl = urlParams.get('sheikh'); // تم التعديل إلى sheikh
+    const reciterFromUrl = urlParams.get('sheikh'); 
     const listenFromUrl = urlParams.get('listen');
 
     if (listenFromUrl === 'radio') {
@@ -729,18 +725,24 @@ let isFocusMode = false;
 
 function toggleFocusMode() {
     isFocusMode = !isFocusMode;
-    const exitBtn = document.getElementById('exit-focus-btn');
+    const focusBtn = document.getElementById('focus-toggle-btn');
     
     if (isFocusMode) {
         // تفعيل الوضع
         document.body.classList.add('focus-mode-active');
         window.scrollTo({ top: 0, behavior: 'smooth' }); // الصعود لأعلى الشاشة تلقائياً
-        showToast(currentLang === 'ar' ? 'تم تفعيل وضع الاستماع الهادئ' : 'Focus Mode Enabled');
         
-        // تحديث نص زر الخروج حسب اللغة
-        if(exitBtn) exitBtn.innerText = currentLang === 'ar' ? 'إنهاء الاستماع الهادئ' : 'Exit Focus Mode';
+        // تفعيل لون الأيقونة الذهبي
+        if (focusBtn) focusBtn.classList.add('active-feature');
+        
+        showToast(currentLang === 'ar' ? 'تم تفعيل وضع الاستماع الهادئ' : 'Focus Mode Enabled');
     } else {
         // إلغاء الوضع
         document.body.classList.remove('focus-mode-active');
+        
+        // إزالة لون الأيقونة الذهبي وإعادتها لطبيعتها
+        if (focusBtn) focusBtn.classList.remove('active-feature');
+        
+        showToast(currentLang === 'ar' ? 'تم إيقاف وضع الاستماع الهادئ' : 'Focus Mode Disabled');
     }
 }
