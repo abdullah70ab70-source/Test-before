@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- العنوان ووصف الموقع -->
     <title>Egy Quran - استمع وحمل القرآن الكريم بأصوات كبار القراء</title>
     <meta name="description" content="منصة Egy Quran تتيح لك الاستماع وتحميل القرآن الكريم بجودة عالية وبأصوات كبار القراء مثل الحصري، المنشاوي، عبد الباسط، مع دعم التشغيل التلقائي والتكرار.">
     <meta name="keywords" content="قرآن كريم, استماع القرآن, تحميل القرآن, مصحف كبار القراء, الحصري, المنشاوي, عبد الباسط عبد الصمد, mp3 قرآن, Egy Quran">
     <meta http-equiv="content-language" content="ar">
 
+    <!-- إرشاد عناكب البحث -->
     <link rel="canonical" href="https://egyquran.com/">
     <meta name="robots" content="index, follow">
 
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://egyquran.com/">
     <meta property="og:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta property="og:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة بدون إعلانات مزعجة.">
     <meta property="og:image" content="https://egyquran.com/icon.png">
 
+    <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Egy Quran - القرآن الكريم بأصوات كبار القراء">
     <meta name="twitter:description" content="استمع وحمل سور القرآن الكريم بجودة عالية وتجربة استخدام سلسة.">
     <meta name="twitter:image" content="https://egyquran.com/icon.png">
 
+    <!-- البيانات المهيكلة -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -48,6 +53,7 @@
     <meta name="apple-mobile-web-app-title" content="Egy Quran">
     <link rel="apple-touch-icon" href="icon.png">
 
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8Q3DV5BJF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -58,10 +64,12 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- استدعاء ملف التصميم -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- رسالة تثبيت التطبيق الانزلاقية -->
     <div id="install-banner" class="install-banner">
         <img src="icon.png" alt="App Icon" class="install-icon">
         <div class="install-info">
@@ -74,6 +82,7 @@
         </button>
     </div>
 
+    <!-- رسالة استئناف الاستماع -->
     <div id="resume-banner">
         <div class="resume-text" id="resume-text">هل تود إكمال الاستماع؟</div>
         <div class="resume-actions">
@@ -82,6 +91,7 @@
         </div>
     </div>
 
+    <!-- رسالة التوست -->
     <div id="toast" class="toast"></div>
 
     <div class="container">
@@ -96,6 +106,7 @@
                     </svg>
                 </a>
                 
+                <!-- زر إذاعة القرآن الكريم مع الإرشاد -->
                 <div class="radio-wrapper">
                     <button class="top-btn" id="radio-btn" onclick="playRadio()" title="إذاعة القرآن الكريم">
                         <span class="radio-badge" id="radio-badge"></span>
@@ -117,6 +128,7 @@
             <h1 id="main-title"></h1>
             <p id="header-subtitle"></p>
             
+            <!-- المعادل الصوتي أسفل القارئ -->
             <div id="header-equalizer" class="header-equalizer">
                 <div class="header-eq-bar"></div>
                 <div class="header-eq-bar"></div>
@@ -124,8 +136,6 @@
                 <div class="header-eq-bar"></div>
                 <div class="header-eq-bar"></div>
             </div>
-
-            <div id="synced-ayah-container" class="synced-ayah-text"></div>
         </header>
 
         <div class="sheikh-selector-wrapper"><div class="sheikh-list" id="sheikh-carousel"></div></div>
@@ -159,6 +169,7 @@
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
                 
+                <!-- زر وضع الاستماع الهادئ (في المشغل) -->
                 <div style="width: 70px; display: flex; justify-content: flex-start;">
                     <button class="icon-btn" id="focus-toggle-btn" onclick="toggleFocusMode()" title="وضع الاستماع الهادئ" style="padding: 4px;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -189,6 +200,7 @@
         </div>
     </div>
 
+    <!-- استدعاء ملف البرمجة -->
     <script src="app.js" defer></script>
 </body>
 </html>
