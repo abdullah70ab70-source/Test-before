@@ -335,7 +335,7 @@ async function selectSheikh(id) {
             `استمع وحمل القرآن الكريم كاملاً بصوت الشيخ ${sheikhName} بجودة عالية وبدون إعلانات مزعجة على Egy Quran.` : 
             `Listen and download the complete Holy Quran by Sheikh ${sheikhName} in high quality on Egy Quran.`);
     }
-    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?reciter=${id}`;
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?Sheikh=${id}`;
     window.history.pushState({ path: newUrl }, '', newUrl);
 
     renderSheikhCarousel(); renderEditionDropdown(); await loadEditionData(id, currentEdition);
@@ -638,7 +638,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navi
     
     // قراءة الرابط للبحث عن قارئ محدد أو الإذاعة
     const urlParams = new URLSearchParams(window.location.search);
-    const reciterFromUrl = urlParams.get('reciter');
+    const reciterFromUrl = urlParams.get('Sheikh');
     const listenFromUrl = urlParams.get('listen');
 
     if (listenFromUrl === 'radio') {
