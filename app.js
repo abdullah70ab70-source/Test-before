@@ -106,7 +106,7 @@ function initAudioBoost() {
                 audioCtx = new AudioContext();
                 audioSource = audioCtx.createMediaElementSource(audioInstance);
                 gainNode = audioCtx.createGain();
-                gainNode.gain.value = 2.5; // قوة تضخيم الصوت (250%)
+                gainNode.gain.value = 3.5; // قوة تضخيم الصوت (350%)
                 audioSource.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
             }
