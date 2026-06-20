@@ -90,9 +90,38 @@ const icons = {
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
 };
 
+// تهيئة المشغل وإضافة خاصية السماح بالتعديل على الصوتيات الخارجية
+let audioInstance = new Audio();
+audioInstance.crossOrigin = "anonymous"; 
+
+// متغيرات تضخيم الصوت
+let audioCtx, gainNode, audioSource;
+
+// دالة لتهيئة مُضخم الصوت (Web Audio API)
+function initAudioBoost() {
+    if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+            audioCtx = new AudioContext();
+            audioSource = audioCtx.createMediaElementSource(audioInstance);
+            gainNode = audioCtx.createGain();
+            
+            // هنا يتم مضاعفة الصوت! 1 = 100%، 2 = 200%، 2.5 = 250%، 3 = 300%.
+            // جعلناه 2.5 كقيمة افتراضية عالية
+            gainNode.gain.value = 2.5; 
+            
+            audioSource.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+        }
+    }
+    // إعادة تفعيل السياق الصوتي إذا كان معلقاً بسبب سياسات المتصفح
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
 let currentTheme = 'light', currentSheikhId = "husary", currentEdition = 1;
 let activeSurahsData = [], playingSurahId = null, playingSheikhId = null, playingEditionId = null, isBuffering = false;
-let audioInstance = new Audio();
 let isRadioHeaderActive = false;
 let isFocusMode = false;
 
@@ -135,7 +164,6 @@ function updateHeaderUI() {
     }
 }
 
-// التعديل الرئيسي لحل مشكلة الترجمة بالكامل
 function toggleLanguage() {
     currentLang = currentLang === 'ar' ? 'en' : 'ar';
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
@@ -162,14 +190,12 @@ function toggleLanguage() {
         if(sData) document.getElementById('player-track-title').innerText = `${translations[currentLang].surahPrefix} ${getSurahName(sData.id, sData.name)}`;
     }
 
-    // إجبار الواجهة على إعادة رسم القوائم باللغة الجديدة
     renderSheikhCarousel();
     renderEditionDropdown();
     if (activeSurahsData && activeSurahsData.length > 0) {
         renderSurahsList();
     }
 
-    // تحديث عنوان المتصفح ووصف البحث
     const metaDesc = document.querySelector('meta[name="description"]');
     if (isRadioHeaderActive || playingSurahId === 'radio') {
         document.title = `Egy Quran - ${translations[currentLang].radioTitle}`;
@@ -441,6 +467,7 @@ function hideRadioDiscovery() {
 
 function playRadio() {
     hideRadioDiscovery();
+    initAudioBoost(); // تشغيل مضخم الصوت
 
     if (playingSurahId === 'radio') { togglePlayPause(); return; }
     
@@ -493,6 +520,7 @@ function playRadio() {
 }
 
 function playSurah(id, url) {
+    initAudioBoost(); // تشغيل مضخم الصوت
     if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
     
     isRadioHeaderActive = false;
@@ -526,6 +554,7 @@ function playSurah(id, url) {
 }
 
 function togglePlayPause() { 
+    initAudioBoost(); // تأكيد تشغيل مضخم الصوت عند بدء التشغيل
     if (audioInstance.paused && audioInstance.src) {
         isBuffering = true;
         syncUIWithAudioState();
