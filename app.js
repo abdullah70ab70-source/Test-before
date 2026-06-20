@@ -121,6 +121,10 @@ function toggleLanguage() {
     document.getElementById('install-desc').innerText = translations[currentLang].installDesc;
     document.getElementById('install-action-btn').innerText = translations[currentLang].installBtn;
     document.getElementById('radio-tooltip').innerText = translations[currentLang].radioTooltip;
+
+    // تحديث نص زر الخروج من الاستماع الهادئ
+    const exitBtn = document.getElementById('exit-focus-btn');
+    if (exitBtn) exitBtn.innerText = currentLang === 'ar' ? 'إنهاء الاستماع الهادئ' : 'Exit Focus Mode';
     
     const wasRadioHeader = isRadioHeaderActive;
     selectSheikh(currentSheikhId);
@@ -335,7 +339,7 @@ async function selectSheikh(id) {
             `استمع وحمل القرآن الكريم كاملاً بصوت الشيخ ${sheikhName} بجودة عالية وبدون إعلانات مزعجة على Egy Quran.` : 
             `Listen and download the complete Holy Quran by Sheikh ${sheikhName} in high quality on Egy Quran.`);
     }
-    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?Sheikh=${id}`;
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?sheikh=${id}`;
     window.history.pushState({ path: newUrl }, '', newUrl);
 
     renderSheikhCarousel(); renderEditionDropdown(); await loadEditionData(id, currentEdition);
@@ -638,7 +642,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navi
     
     // قراءة الرابط للبحث عن قارئ محدد أو الإذاعة
     const urlParams = new URLSearchParams(window.location.search);
-    const reciterFromUrl = urlParams.get('Sheikh');
+    const reciterFromUrl = urlParams.get('sheikh'); // تم التعديل إلى sheikh
     const listenFromUrl = urlParams.get('listen');
 
     if (listenFromUrl === 'radio') {
@@ -717,3 +721,26 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navi
         }
     }
 })();
+
+// =======================================================
+// وضع الاستماع الهادئ (Focus Mode)
+// =======================================================
+let isFocusMode = false;
+
+function toggleFocusMode() {
+    isFocusMode = !isFocusMode;
+    const exitBtn = document.getElementById('exit-focus-btn');
+    
+    if (isFocusMode) {
+        // تفعيل الوضع
+        document.body.classList.add('focus-mode-active');
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // الصعود لأعلى الشاشة تلقائياً
+        showToast(currentLang === 'ar' ? 'تم تفعيل وضع الاستماع الهادئ' : 'Focus Mode Enabled');
+        
+        // تحديث نص زر الخروج حسب اللغة
+        if(exitBtn) exitBtn.innerText = currentLang === 'ar' ? 'إنهاء الاستماع الهادئ' : 'Exit Focus Mode';
+    } else {
+        // إلغاء الوضع
+        document.body.classList.remove('focus-mode-active');
+    }
+}

@@ -94,10 +94,21 @@
     <!-- رسالة التوست -->
     <div id="toast" class="toast"></div>
 
+    <!-- زر الخروج من وضع الاستماع الهادئ -->
+    <button class="exit-focus-btn" onclick="toggleFocusMode()" id="exit-focus-btn">إنهاء الاستماع الهادئ</button>
+
     <div class="container">
         <div class="top-bar">
             <div class="top-bar-group">
                 <button class="top-btn" onclick="toggleTheme()" id="theme-toggle-btn"></button>
+                
+                <!-- زر وضع الاستماع الهادئ -->
+                <button class="top-btn" onclick="toggleFocusMode()" title="وضع الاستماع الهادئ">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                    </svg>
+                </button>
+
                 <a href="mailto:your-email@example.com" class="top-btn email-btn" title="تواصل معنا">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -105,7 +116,7 @@
                     </svg>
                 </a>
                 
-                <!-- زر إذاعة القرآن الكريم مع الإرشاد (Tooltip & Badge) -->
+                <!-- زر إذاعة القرآن الكريم مع الإرشاد -->
                 <div class="radio-wrapper">
                     <button class="top-btn" id="radio-btn" onclick="playRadio()" title="إذاعة القرآن الكريم">
                         <span class="radio-badge" id="radio-badge"></span>
@@ -159,7 +170,7 @@
             
             <div style="display:flex; align-items:center; justify-content:space-between; direction:ltr; margin-top:2px;">
                 
-                <div style="width: 70px;"></div> <!-- Placeholder للحفاظ على التوسيط -->
+                <div style="width: 70px;"></div> 
                 
                 <div style="display:flex; align-items:center; gap:16px;">
                     <button class="icon-btn" onclick="playPrevious()" title="السابق">

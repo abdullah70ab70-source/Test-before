@@ -189,3 +189,73 @@ header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
     z-index: 10000; text-align: center; white-space: nowrap;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* =======================================================
+   وضع الاستماع الهادئ (Focus Mode)
+======================================================== */
+
+/* إخفاء العناصر غير الضرورية عند تفعيل الوضع */
+body.focus-mode-active .sheikh-selector-wrapper,
+body.focus-mode-active .edition-dropdown-wrapper,
+body.focus-mode-active .surah-list-container,
+body.focus-mode-active .top-bar-group,
+body.focus-mode-active .install-banner,
+body.focus-mode-active button[onclick="toggleLanguage()"] {
+    display: none !important;
+}
+
+/* تهيئة الشاشة لتكون خالية ومريحة للعين */
+body.focus-mode-active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden; /* منع التمرير لأسفل */
+}
+
+/* توسيط صورة القارئ واسم السورة */
+body.focus-mode-active .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-top: -80px; /* لرفع العناصر للأعلى قليلاً لتناسب المشغل السفلي */
+}
+
+/* تكبير صورة القارئ وإضافة لمسة جمالية */
+body.focus-mode-active header {
+    transform: scale(1.35);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 30px;
+}
+
+/* زر إنهاء الوضع الهادئ */
+.exit-focus-btn {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass-active);
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.exit-focus-btn:hover {
+    background: var(--accent-gold);
+    color: #fff;
+}
+
+/* إظهار زر الإنهاء فقط عند تفعيل الوضع */
+body.focus-mode-active .exit-focus-btn {
+    display: block;
+}
