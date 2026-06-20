@@ -96,7 +96,7 @@ body.dark-theme .radio-badge { border-color: var(--bg-dark); }
 /* الرأس واسم القارئ */
 header { text-align: center; padding-bottom: 20px; }
 .header-img { height: 85px; width: 85px; border-radius: 50%; border: 2px solid var(--accent-gold); box-shadow: 0 4px 20px var(--shadow-intensity); object-fit: cover; margin-bottom: 10px; }
-header h1 { font-size: 1.15rem; font-weight: 300; margin-top: 5px; } /* تم التصغير درجة */
+header h1 { font-size: 1.15rem; font-weight: 300; margin-top: 5px; } 
 header h1 strong { font-weight: 700; color: var(--accent-gold); }
 header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
@@ -118,6 +118,7 @@ header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 }
 .header-eq-bar {
     width: 3px;
+    height: 100%; /* هذا هو السطر الذي أضفته لحل مشكلة الظهور */
     background: var(--accent-gold);
     border-radius: 3px;
     transform-origin: bottom;
@@ -240,7 +241,7 @@ body.focus-mode-active {
     flex-direction: column;
     justify-content: center;
     height: 100vh;
-    overflow: hidden; /* منع التمرير لأسفل */
+    overflow: hidden; 
 }
 
 /* توسيط صورة القارئ واسم السورة */
@@ -250,7 +251,7 @@ body.focus-mode-active .container {
     justify-content: center;
     align-items: center;
     height: 100%;
-    margin-top: -80px; /* لرفع العناصر للأعلى قليلاً لتناسب المشغل السفلي */
+    margin-top: -80px; 
 }
 
 /* تكبير صورة القارئ وإضافة لمسة جمالية */
