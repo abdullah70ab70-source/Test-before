@@ -260,3 +260,12 @@ body.focus-mode-active header {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     margin-bottom: 30px;
 }
+
+/* تصغير حجم خط اسم الشيخ والختمة داخل وضع الاستماع الهادئ فقط */
+body.focus-mode-active header h1 {
+    font-size: 0.8rem; /* حجم خط اسم الشيخ */
+}
+
+body.focus-mode-active header p {
+    font-size: 0.6rem; /* حجم خط اسم الختمة */
+}
