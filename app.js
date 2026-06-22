@@ -94,10 +94,8 @@ const icons = {
 let audioInstance = new Audio();
 audioInstance.crossOrigin = "anonymous"; 
 
-// متغيرات تضخيم الصوت المنفصل
+// متغيرات تضخيم الصوت
 let audioCtx, gainNode, audioSource;
-const quranBoostValue = 2.5; // تضخيم تلاوات السور (250%)
-const radioBoostValue = 4.5; // تضخيم الإذاعة فقط (450%) - يمكنك تعديل هذا الرقم كيفما تشاء
 
 // دالة تهيئة مضخم الصوت مع التعامل مع الأخطاء وإجبار فتح المسار
 function initAudioBoost() {
@@ -108,20 +106,11 @@ function initAudioBoost() {
                 audioCtx = new AudioContext();
                 audioSource = audioCtx.createMediaElementSource(audioInstance);
                 gainNode = audioCtx.createGain();
+                gainNode.gain.value = 3.5; // قوة تضخيم الصوت (350%)
                 audioSource.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
             }
         }
-        
-        // فحص نوع التشغيل لتطبيق التضخيم المناسب في كل مرة
-        if (gainNode) {
-            if (playingSurahId === 'radio') {
-                gainNode.gain.value = radioBoostValue; // تطبيق مستوى صوت الإذاعة
-            } else {
-                gainNode.gain.value = quranBoostValue; // تطبيق مستوى صوت التلاوات
-            }
-        }
-
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume().catch(e => console.log("Context Resume Error:", e));
         }
@@ -232,7 +221,14 @@ function toggleFocusMode() {
     
     if (isFocusMode) {
         document.body.classList.add('focus-mode-active');
+        
+        // التعديل هنا: تمرير الشاشة للأعلى سواء كنا في الموبايل أو الكمبيوتر
+        const appWrapper = document.querySelector('.app-wrapper');
+        if (appWrapper) {
+            appWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
+
         if (focusBtn) focusBtn.classList.add('active-feature');
         showToast(currentLang === 'ar' ? 'تم تفعيل وضع الاستماع الهادئ' : 'Focus Mode Enabled');
     } else {
@@ -477,14 +473,13 @@ function hideRadioDiscovery() {
 
 function playRadio() {
     hideRadioDiscovery();
+    initAudioBoost(); 
 
     if (playingSurahId === 'radio') { togglePlayPause(); return; }
     
     playingSurahId = 'radio'; 
     playingSheikhId = null; 
     playingEditionId = null;
-
-    initAudioBoost(); // استدعاء التضخيم هنا ليعرف المتغير الجديد أنه راديو
     
     isBuffering = true; 
     
@@ -539,12 +534,11 @@ function playRadio() {
 }
 
 function playSurah(id, url) {
+    initAudioBoost(); 
     if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
     
     isRadioHeaderActive = false;
     playingSurahId = id; playingSheikhId = currentSheikhId; playingEditionId = currentEdition;
-
-    initAudioBoost(); // استدعاء التضخيم هنا ليعرف المتغير الجديد أنها سورة
     
     isBuffering = true; 
     
