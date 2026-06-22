@@ -348,7 +348,7 @@ async function loadEditionData(sheikhId, editionNum) {
     const cached = localStorage.getItem(cacheKey);
     if (cached) { activeSurahsData = JSON.parse(cached); renderSurahsList(); }
     try {
-        const res = await fetch(`data/${config.file}`);
+        const res = await fetch(config.file);
         const data = await res.json();
         activeSurahsData = data;
         localStorage.setItem(cacheKey, JSON.stringify(data));
