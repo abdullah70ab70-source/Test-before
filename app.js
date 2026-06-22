@@ -524,19 +524,17 @@ async function renderSurahsList() {
     applyTransition('main-surah-list');
     syncUIWithAudioState();
 
-    // فحص الكاش الخاص بالصوتيات المحفوظة وإضافة علامة صح صغيرة جداً
+    // فحص الكاش الخاص بالصوتيات المحفوظة 
     if ('caches' in window) {
         try {
             const cache = await caches.open('egy-quran-audio');
             for (let s of activeSurahsData) {
                 const match = await cache.match(s.url);
                 if (match) {
-                    const row = container.querySelector(`.surah-row[data-id="${s.id}"]`);
-                    if (row) {
-                        const playBtn = row.querySelector('.play-cell');
-                        if (playBtn && !row.querySelector('.tiny-saved-check')) {
-                            playBtn.insertAdjacentHTML('afterend', `<svg class="tiny-saved-check" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; margin: 0 4px;"><path d="M20 6L9 17l-5-5"></path></svg>`);
-                        }
+                    const btn = document.getElementById(`dl-btn-${s.id}`);
+                    if (btn) {
+                        btn.classList.add('saved-icon');
+                        btn.innerHTML = icons.saved;
                     }
                 }
             }
@@ -546,24 +544,15 @@ async function renderSurahsList() {
 
 const dlModal = document.getElementById('download-modal'), dlFill = document.getElementById('dl-progress-fill'), dlPct = document.getElementById('dl-modal-pct'), dlTitle = document.getElementById('dl-modal-title');
 async function startDownload(id, url) {
-    // فحص وجود إنترنت أولاً
-    if (!navigator.onLine) {
-        showToast(currentLang === 'ar' ? "عذراً، لا يوجد اتصال بالإنترنت للتحميل." : "No internet connection to download.");
-        return;
-    }
-
     if (activeDownloads[id]) return; 
 
-    // فحص ما إذا كانت السورة محملة مسبقاً لإعطاء رسالة تأكيد
     if ('caches' in window) {
         try {
             const cache = await caches.open('egy-quran-audio');
             const isCached = await cache.match(url);
             if (isCached) {
-                const confirmMsg = currentLang === 'ar' ? "هذه السورة محملة مسبقاً، هل توافق على الاستمرار في تحميلها مرة أخرى؟" : "Surah is already downloaded. Download again?";
-                if (!window.confirm(confirmMsg)) {
-                    return; // إلغاء التحميل إذا لم يوافق المستخدم
-                }
+                showToast(currentLang === 'ar' ? "هذه السورة محفوظة بالفعل للاستماع بدون إنترنت" : "Surah already saved for offline");
+                return;
             }
         } catch(e) {}
     }
@@ -613,7 +602,6 @@ async function startDownload(id, url) {
         finishDownloadUI(id, false);
     }
 }
-
 function finishDownloadUI(id, success) { 
     if(dlTitle) {
         dlTitle.innerText = translations[currentLang].downloadComplete; dlFill.style.width = '100%'; dlPct.innerText = '100%'; 
@@ -704,11 +692,7 @@ function playRadio() {
     audioInstance.load(); 
     
     audioInstance.play().catch(e => {
-        if (!navigator.onLine) {
-            isBuffering = true;
-        } else {
-            isBuffering = false;
-        }
+        isBuffering = false;
         syncUIWithAudioState();
     });
     
@@ -782,11 +766,7 @@ async function playSurah(id, url) {
     audioInstance.load();
     
     audioInstance.play().catch(e => {
-        if (!navigator.onLine) {
-            isBuffering = true;
-        } else {
-            isBuffering = false;
-        }
+        isBuffering = false;
         syncUIWithAudioState();
     });
     
@@ -824,11 +804,7 @@ function togglePlayPause() {
         }
         
         audioInstance.play().catch(e => {
-            if (!navigator.onLine) {
-                isBuffering = true;
-            } else {
-                isBuffering = false;
-            }
+            isBuffering = false;
             syncUIWithAudioState();
         });
     } else {
