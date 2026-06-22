@@ -221,14 +221,7 @@ function toggleFocusMode() {
     
     if (isFocusMode) {
         document.body.classList.add('focus-mode-active');
-        
-        // التعديل هنا: تمرير الشاشة للأعلى سواء كنا في الموبايل أو الكمبيوتر
-        const appWrapper = document.querySelector('.app-wrapper');
-        if (appWrapper) {
-            appWrapper.scrollTo({ top: 0, behavior: 'smooth' });
-        }
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
-
         if (focusBtn) focusBtn.classList.add('active-feature');
         showToast(currentLang === 'ar' ? 'تم تفعيل وضع الاستماع الهادئ' : 'Focus Mode Enabled');
     } else {
@@ -355,7 +348,7 @@ async function loadEditionData(sheikhId, editionNum) {
     const cached = localStorage.getItem(cacheKey);
     if (cached) { activeSurahsData = JSON.parse(cached); renderSurahsList(); }
     try {
-        const res = await fetch(config.file);
+        const res = await fetch(`data/${config.file}`);
         const data = await res.json();
         activeSurahsData = data;
         localStorage.setItem(cacheKey, JSON.stringify(data));
