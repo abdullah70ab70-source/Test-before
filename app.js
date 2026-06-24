@@ -2,7 +2,6 @@
 let toastTimeout;
 function showToast(msg) {
     const toast = document.getElementById('toast');
-    if (!toast) return;
     toast.innerText = msg;
     toast.classList.add('show');
     clearTimeout(toastTimeout);
@@ -11,8 +10,7 @@ function showToast(msg) {
 
 // التعامل مع تنبيه الاستئناف
 function closeResumeBanner() {
-    const banner = document.getElementById('resume-banner');
-    if(banner) banner.classList.remove('show');
+    document.getElementById('resume-banner').classList.remove('show');
 }
 function resumePlayback() {
     closeResumeBanner();
@@ -27,8 +25,7 @@ function resumePlayback() {
 
 // التعامل مع شريط تثبيت التطبيق الانزلاقي
 function closeInstallBanner() {
-    const banner = document.getElementById('install-banner');
-    if(banner) banner.classList.remove('show');
+    document.getElementById('install-banner').classList.remove('show');
 }
 
 const surahNamesEn = [
@@ -41,8 +38,8 @@ const surahNamesEn = [
 ];
 
 const translations = {
-    ar: { langLabel: "EN", sheikhPrefix: "الشيخ", surahPrefix: "سورة", downloading: "جاري تحميل", downloadComplete: "تمت العملية بنجاح!", resumeBtn: "متابعة الاستماع", cancelBtn: "إلغاء", radioTitle: "إذاعة القرآن الكريم من القاهرة", live: "مباشر", installTitle: "تثبيت تطبيق Egy Quran", installDesc: "تجربة استماع أسرع وتعمل بدون إنترنت", installBtn: "تثبيت", radioTooltip: "إذاعة القرآن الكريم" },
-    en: { langLabel: "AR", sheikhPrefix: "Sheikh", surahPrefix: "Surah", downloading: "Downloading", downloadComplete: "Success!", resumeBtn: "Resume Listening", cancelBtn: "Cancel", radioTitle: "Holy Quran Radio Cairo", live: "LIVE", installTitle: "Install Egy Quran App", installDesc: "Faster experience with offline support", installBtn: "Install", radioTooltip: "Holy Quran Radio" }
+    ar: { langLabel: "EN", sheikhPrefix: "الشيخ", surahPrefix: "سورة", downloading: "جاري تحميل", downloadComplete: "تم التحميل بنجاح!", resumeBtn: "متابعة الاستماع", cancelBtn: "إلغاء", radioTitle: "إذاعة القرآن الكريم من القاهرة", live: "مباشر", installTitle: "تثبيت تطبيق Egy Quran", installDesc: "تجربة استماع أسرع وتعمل بدون إنترنت", installBtn: "تثبيت", radioTooltip: "إذاعة القرآن الكريم" },
+    en: { langLabel: "AR", sheikhPrefix: "Sheikh", surahPrefix: "Surah", downloading: "Downloading", downloadComplete: "Download Complete!", resumeBtn: "Resume Listening", cancelBtn: "Cancel", radioTitle: "Holy Quran Radio Cairo", live: "LIVE", installTitle: "Install Egy Quran App", installDesc: "Faster experience with offline support", installBtn: "Install", radioTooltip: "Holy Quran Radio" }
 };
 let currentLang = 'ar';
 const radioUrl = "https://stream.radiojar.com/8s5u5tpdtwzuv";
@@ -90,58 +87,17 @@ const icons = {
     loading: '<svg class="loading-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>',
     sun: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>',
     moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>',
-    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
-    saved: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>'
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
 };
-
-// تهيئة قاعدة بيانات IndexedDB
-const dbName = "EgyQuranDB";
-const storeName = "editionsCache";
-
-function openDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(dbName, 1);
-        request.onupgradeneeded = (e) => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStore(storeName);
-            }
-        };
-        request.onsuccess = (e) => resolve(e.target.result);
-        request.onerror = (e) => reject(e.target.error);
-    });
-}
-
-async function getCache(key) {
-    try {
-        const db = await openDB();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readonly");
-            const store = transaction.objectStore(storeName);
-            const request = store.get(key);
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
-    } catch (e) {
-        return null;
-    }
-}
-
-async function setCache(key, val) {
-    try {
-        const db = await openDB();
-        const transaction = db.transaction(storeName, "readwrite");
-        const store = transaction.objectStore(storeName);
-        store.put(val, key);
-    } catch (e) { }
-}
 
 // تهيئة المشغل
 let audioInstance = new Audio();
 audioInstance.crossOrigin = "anonymous"; 
 
+// متغيرات تضخيم الصوت
 let audioCtx, gainNode, audioSource;
 
+// دالة تهيئة مضخم الصوت مع التعامل مع الأخطاء وإجبار فتح المسار
 function initAudioBoost() {
     try {
         if (!audioCtx) {
@@ -149,26 +105,18 @@ function initAudioBoost() {
             if (AudioContext) {
                 audioCtx = new AudioContext();
                 audioSource = audioCtx.createMediaElementSource(audioInstance);
-                
                 gainNode = audioCtx.createGain();
-                gainNode.gain.value = 3.5; 
-                
-                const compressor = audioCtx.createDynamicsCompressor();
-                compressor.threshold.setValueAtTime(-24, audioCtx.currentTime);
-                compressor.knee.setValueAtTime(30, audioCtx.currentTime);
-                compressor.ratio.setValueAtTime(12, audioCtx.currentTime);
-                compressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
-                compressor.release.setValueAtTime(0.25, audioCtx.currentTime);
-                
+                gainNode.gain.value = 2.5; // قوة تضخيم الصوت (250%)
                 audioSource.connect(gainNode);
-                gainNode.connect(compressor);
-                compressor.connect(audioCtx.destination);
+                gainNode.connect(audioCtx.destination);
             }
         }
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume().catch(e => console.log("Context Resume Error:", e));
         }
-    } catch (e) {}
+    } catch (e) {
+        console.log("Audio API Init Error:", e);
+    }
 }
 
 let currentTheme = 'light', currentSheikhId = "husary", currentEdition = 1;
@@ -184,20 +132,6 @@ let savedReciterEditions = {};
 
 let playbackMode = 'autonext'; 
 let playbackMenuOpen = false;
-
-// متغيرات مؤقت النوم
-let sleepTimerTimeout = null;
-let sleepTimerSurahEnd = false;
-let timerMenuOpen = false;
-
-function applyTransition(elementId) {
-    const el = document.getElementById(elementId);
-    if(el) {
-        el.classList.remove('fade-slide-up');
-        void el.offsetWidth;
-        el.classList.add('fade-slide-up');
-    }
-}
 
 function getSurahName(id, nameAr) { return currentLang === 'ar' ? nameAr : surahNamesEn[id]; }
 
@@ -236,21 +170,13 @@ function toggleLanguage() {
     document.documentElement.style.setProperty('--dir', document.documentElement.dir);
     
     document.getElementById('lang-label').innerText = translations[currentLang].langLabel;
+    document.getElementById('resume-btn-yes').innerText = translations[currentLang].resumeBtn;
+    document.getElementById('resume-btn-no').innerText = translations[currentLang].cancelBtn;
     
-    const resumeBtn = document.getElementById('resume-btn-yes');
-    const cancelBtn = document.getElementById('resume-btn-no');
-    if(resumeBtn) resumeBtn.innerText = translations[currentLang].resumeBtn;
-    if(cancelBtn) cancelBtn.innerText = translations[currentLang].cancelBtn;
-    
-    const installTitle = document.getElementById('install-title');
-    if(installTitle) {
-        installTitle.innerText = translations[currentLang].installTitle;
-        document.getElementById('install-desc').innerText = translations[currentLang].installDesc;
-        document.getElementById('install-action-btn').innerText = translations[currentLang].installBtn;
-    }
-    
-    const radioTooltip = document.getElementById('radio-tooltip');
-    if(radioTooltip) radioTooltip.innerText = translations[currentLang].radioTooltip;
+    document.getElementById('install-title').innerText = translations[currentLang].installTitle;
+    document.getElementById('install-desc').innerText = translations[currentLang].installDesc;
+    document.getElementById('install-action-btn').innerText = translations[currentLang].installBtn;
+    document.getElementById('radio-tooltip').innerText = translations[currentLang].radioTooltip;
 
     updateHeaderUI();
     setPlaybackMode(playbackMode);
@@ -307,42 +233,16 @@ function toggleFocusMode() {
     syncUIWithAudioState(); 
 }
 
-// --- قوائم التشغيل والمؤقت ---
 function togglePlaybackMenu(event) {
     if(event) event.stopPropagation();
     playbackMenuOpen = !playbackMenuOpen;
     const menu = document.getElementById('playback-menu');
-    if(menu) {
-        if (playbackMenuOpen) { 
-            menu.classList.add('show'); 
-            const timerMenu = document.getElementById('timer-menu');
-            if(timerMenu) timerMenu.classList.remove('show');
-            timerMenuOpen = false;
-        } else { 
-            menu.classList.remove('show'); 
-        }
-    }
-}
-
-function toggleTimerMenu(event) {
-    if(event) event.stopPropagation();
-    timerMenuOpen = !timerMenuOpen;
-    const menu = document.getElementById('timer-menu');
-    if(menu) {
-        if (timerMenuOpen) { 
-            menu.classList.add('show'); 
-            const pbMenu = document.getElementById('playback-menu');
-            if(pbMenu) pbMenu.classList.remove('show'); 
-            playbackMenuOpen = false; 
-        } else { 
-            menu.classList.remove('show'); 
-        }
-    }
+    if (playbackMenuOpen) { menu.classList.add('show'); } 
+    else { menu.classList.remove('show'); }
 }
 
 document.addEventListener('click', (e) => {
     if (playbackMenuOpen && !e.target.closest('#playback-wrapper')) togglePlaybackMenu();
-    if (timerMenuOpen && !e.target.closest('#timer-wrapper')) toggleTimerMenu();
 });
 
 function setPlaybackMode(mode, event) {
@@ -372,35 +272,8 @@ function setPlaybackMode(mode, event) {
     if (playbackMenuOpen) togglePlaybackMenu();
 }
 
-function setSleepTimer(val, event) {
-    if(event) event.stopPropagation();
-    clearTimeout(sleepTimerTimeout);
-    sleepTimerSurahEnd = false;
-    const btn = document.getElementById('btn-sleep-timer');
-    if(!btn) return;
-
-    if (val === 'off') {
-        btn.classList.remove('active-feature');
-        showToast(currentLang === 'ar' ? 'تم إيقاف مؤقت النوم' : 'Sleep timer disabled');
-    } else if (val === 'end') {
-        sleepTimerSurahEnd = true;
-        btn.classList.add('active-feature');
-        showToast(currentLang === 'ar' ? 'سيتوقف التشغيل بعد انتهاء السورة' : 'Will stop after Surah ends');
-    } else {
-        btn.classList.add('active-feature');
-        showToast(currentLang === 'ar' ? `سيتوقف التشغيل بعد ${val} دقيقة` : `Will stop after ${val} mins`);
-        sleepTimerTimeout = setTimeout(() => {
-            audioInstance.pause();
-            btn.classList.remove('active-feature');
-            showToast(currentLang === 'ar' ? 'تم إيقاف التشغيل التلقائي (مؤقت النوم)' : 'Playback stopped by timer');
-        }, val * 60 * 1000);
-    }
-    toggleTimerMenu();
-}
-
 function renderPlaybackMenu() {
     const menu = document.getElementById('playback-menu');
-    if(!menu) return;
     const items = [
         { id: 'autonext', textAr: 'تشغيل تلقائي', textEn: 'Auto-Next' },
         { id: 'loop', textAr: 'تكرار السورة', textEn: 'Loop Surah' },
@@ -416,8 +289,7 @@ function renderPlaybackMenu() {
 function syncUIWithAudioState() {
     const isPlaying = !audioInstance.paused;
     const statusIcon = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play);
-    const playBtn = document.getElementById('player-play-btn');
-    if(playBtn) playBtn.innerHTML = statusIcon;
+    document.getElementById('player-play-btn').innerHTML = statusIcon;
 
     const radioBtn = document.getElementById('radio-btn');
     if (radioBtn) {
@@ -443,10 +315,10 @@ function syncUIWithAudioState() {
 
     document.querySelectorAll('.surah-row').forEach(row => {
         const sId = parseInt(row.getAttribute('data-id'));
-        const pBtn = row.querySelector('.play-cell');
+        const playBtn = row.querySelector('.play-cell');
         const isCurrentActive = (sId === playingSurahId && playingSurahId !== 'radio' && currentSheikhId === playingSheikhId && currentEdition === playingEditionId);
-        if (isCurrentActive) { row.classList.add('active-row'); if(pBtn) pBtn.innerHTML = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play); } 
-        else { row.classList.remove('active-row'); if(pBtn) pBtn.innerHTML = icons.play; }
+        if (isCurrentActive) { row.classList.add('active-row'); playBtn.innerHTML = isBuffering ? icons.loading : (isPlaying ? icons.pause : icons.play); } 
+        else { row.classList.remove('active-row'); playBtn.innerHTML = icons.play; }
     });
 
     document.querySelectorAll('.sheikh-item').forEach(item => {
@@ -473,145 +345,69 @@ async function loadEditionData(sheikhId, editionNum) {
     const config = editionsConfig[sheikhId][editionNum];
     if (!config) return; 
     const cacheKey = `cache_${config.file}`;
-    
-    const cached = await getCache(cacheKey);
-    if (cached) { 
-        activeSurahsData = cached; 
-        renderSurahsList(); 
-    }
-    
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) { activeSurahsData = JSON.parse(cached); renderSurahsList(); }
     try {
         const res = await fetch(config.file);
         const data = await res.json();
         activeSurahsData = data;
-        await setCache(cacheKey, data); 
+        localStorage.setItem(cacheKey, JSON.stringify(data));
         renderSurahsList();
-    } catch (e) { 
-        if (!cached) {
-            showToast(currentLang === 'ar' ? "فشل جلب قائمة السور، تحقق من اتصالك" : "Failed to load Surahs, check connection");
-        }
-    }
+    } catch (e) { console.error("Error loading JSON"); }
 }
 
 function renderSheikhCarousel() {
-    const container = document.getElementById('sheikh-carousel');
-    if(!container) return;
-    container.innerHTML = recitersList.map(s => {
+    document.getElementById('sheikh-carousel').innerHTML = recitersList.map(s => {
         const nameToShow = currentLang === 'ar' ? s.nameAr : s.nameEn;
         return `<div class="sheikh-item ${s.id === currentSheikhId ? 'active' : ''}" data-id="${s.id}" onclick="selectSheikh('${s.id}')">
                     <div class="sheikh-avatar-container"><img src="${s.image}" class="sheikh-avatar-img"></div>
                     <div style="font-size:0.65rem; font-weight:700; margin-top:6px;">${nameToShow}</div>
                 </div>`;
     }).join('');
-    
-    applyTransition('sheikh-carousel');
     syncUIWithAudioState();
 }
 
-async function renderSurahsList() {
-    const container = document.getElementById('main-surah-list');
-    if(!container) return;
-    container.innerHTML = activeSurahsData.map(s => {
+function renderSurahsList() {
+    document.getElementById('main-surah-list').innerHTML = activeSurahsData.map(s => {
         return `<div class="surah-row" data-id="${s.id}">
                     <div class="surah-info"><span class="surah-number">${String(s.id).padStart(3, '0')}</span><span class="surah-name">${translations[currentLang].surahPrefix} ${getSurahName(s.id, s.name)}</span></div>
                     <div class="surah-actions" style="flex-direction: ${currentLang === 'ar' ? 'row' : 'row-reverse'};">
                         <button class="surah-action-btn play-cell" onclick="playSurah(${s.id}, '${s.url}')">${icons.play}</button>
-                        <button class="surah-action-btn download-btn" id="dl-btn-${s.id}" onclick="startDownload(${s.id}, '${s.url}')" title="تحميل / حفظ">${icons.download}</button>
+                        <button class="surah-action-btn" onclick="startDownload(${s.id}, '${s.url}')" title="تحميل">${icons.download}</button>
                     </div>
                 </div>`;
     }).join('');
-    
-    applyTransition('main-surah-list');
     syncUIWithAudioState();
-
-    // فحص الكاش الخاص بالصوتيات المحفوظة 
-    if ('caches' in window) {
-        try {
-            const cache = await caches.open('egy-quran-audio');
-            for (let s of activeSurahsData) {
-                const match = await cache.match(s.url);
-                if (match) {
-                    const btn = document.getElementById(`dl-btn-${s.id}`);
-                    if (btn) {
-                        btn.classList.add('saved-icon');
-                        btn.innerHTML = icons.saved;
-                    }
-                }
-            }
-        } catch(e) {}
-    }
 }
 
 const dlModal = document.getElementById('download-modal'), dlFill = document.getElementById('dl-progress-fill'), dlPct = document.getElementById('dl-modal-pct'), dlTitle = document.getElementById('dl-modal-title');
 async function startDownload(id, url) {
-    if (activeDownloads[id]) return; 
-
-    if ('caches' in window) {
-        try {
-            const cache = await caches.open('egy-quran-audio');
-            const isCached = await cache.match(url);
-            if (isCached) {
-                showToast(currentLang === 'ar' ? "هذه السورة محفوظة بالفعل للاستماع بدون إنترنت" : "Surah already saved for offline");
-                return;
-            }
-        } catch(e) {}
-    }
-
-    activeDownloads[id] = true;
-    const sData = activeSurahsData.find(s => s.id === id); 
-    const sName = getSurahName(id, sData.name);
-    if(dlModal) {
-        dlModal.style.display = 'flex'; dlFill.style.width = '0%'; dlPct.innerText = '0%'; dlTitle.innerText = `${translations[currentLang].downloading} ${sName}...`;
-    }
-    
+    if (activeDownloads[id]) return; activeDownloads[id] = true;
+    const sData = activeSurahsData.find(s => s.id === id); const sName = getSurahName(id, sData.name);
+    dlModal.style.display = 'flex'; dlFill.style.width = '0%'; dlPct.innerText = '0%'; dlTitle.innerText = `${translations[currentLang].downloading} ${sName}...`;
     try {
         const response = await fetch(url, { mode: 'cors' });
         if (!response.ok) throw new Error("Network Error");
-        
-        let cacheResponse = null;
-        if ('caches' in window) {
-            cacheResponse = response.clone();
-        }
-
         const total = parseInt(response.headers.get('content-length'), 10);
         const reader = response.body.getReader();
         let received = 0; let chunks = [];
-        
         while(true) {
             const {done, value} = await reader.read();
             if (done) break; chunks.push(value); received += value.length;
-            if (total && dlFill) { const pct = Math.round((received / total) * 100); dlFill.style.width = pct + '%'; dlPct.innerText = pct + '%'; } 
+            if (total) { const pct = Math.round((received / total) * 100); dlFill.style.width = pct + '%'; dlPct.innerText = pct + '%'; } 
+            else { dlPct.innerHTML = '<span class="loading-spin" style="display:inline-block; width:15px; height:15px;">⏳</span>'; }
         }
-        
-        // حفظ في الكاش
-        if (cacheResponse) {
-            const cache = await caches.open('egy-quran-audio');
-            await cache.put(url, cacheResponse);
-        }
-        
-        // التحميل الفعلي للملف
         const blob = new Blob(chunks, { type: 'audio/mpeg' }); const objectUrl = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = objectUrl; a.download = `${translations[currentLang].surahPrefix}_${sName}.mp3`;
         document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(objectUrl);
-        
-        finishDownloadUI(id, true);
+        finishDownloadUI(id);
     } catch (err) {
-        // Fallback
         const a = document.createElement('a'); a.href = url; a.download = `${translations[currentLang].surahPrefix}_${sName}.mp3`; a.target = '_blank';
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        finishDownloadUI(id, false);
+        finishDownloadUI(id);
     }
 }
-function finishDownloadUI(id, success) { 
-    if(dlTitle) {
-        dlTitle.innerText = translations[currentLang].downloadComplete; dlFill.style.width = '100%'; dlPct.innerText = '100%'; 
-        setTimeout(() => { 
-            dlModal.style.display = 'none'; 
-            delete activeDownloads[id]; 
-            if(success) renderSurahsList(); 
-        }, 1500);
-    }
-}
+function finishDownloadUI(id) { dlTitle.innerText = translations[currentLang].downloadComplete; dlFill.style.width = '100%'; dlPct.innerText = '100%'; setTimeout(() => { dlModal.style.display = 'none'; delete activeDownloads[id]; }, 1500); }
 
 async function selectSheikh(id) {
     currentSheikhId = id;
@@ -647,13 +443,9 @@ async function selectSheikh(id) {
 }
 
 function renderEditionDropdown() {
-    const wrapper = document.getElementById('edition-dropdown-wrapper');
-    if(!wrapper) return;
     const configs = editionsConfig[currentSheikhId]; const keys = Object.keys(configs);
     const pills = keys.map(key => `<div class="edition-pill ${currentEdition == key ? 'active' : ''}" data-key="${key}" onclick="selectEditionDropdown(${key}, event)">${currentLang === 'ar' ? configs[key].pillAr : configs[key].pillEn}</div>`).join('');
-    wrapper.innerHTML = `<div class="edition-list-wrapper"><div class="edition-list">${pills}</div></div>`;
-    
-    applyTransition('edition-dropdown-wrapper');
+    document.getElementById('edition-dropdown-wrapper').innerHTML = `<div class="edition-list-wrapper"><div class="edition-list">${pills}</div></div>`;
     syncUIWithAudioState(); 
 }
 
@@ -667,10 +459,8 @@ async function selectEditionDropdown(num, event) {
 }
 
 function hideRadioDiscovery() {
-    const tooltip = document.getElementById('radio-tooltip');
-    const badge = document.getElementById('radio-badge');
-    if(tooltip) tooltip.classList.remove('show');
-    if(badge) badge.classList.remove('show');
+    document.getElementById('radio-tooltip').classList.remove('show');
+    document.getElementById('radio-badge').classList.remove('show');
     localStorage.setItem('radioDiscovered', 'true');
 }
 
@@ -686,12 +476,14 @@ function playRadio() {
     
     isBuffering = true; 
     
+    // إصلاح مشكلة المتصفح: تفريغ المسار القديم وإجباره على التحديث
     audioInstance.pause();
     audioInstance.src = radioUrl; 
     audioInstance.loop = false;
     audioInstance.load(); 
     
     audioInstance.play().catch(e => {
+        console.log("Audio Play Error:", e);
         isBuffering = false;
         syncUIWithAudioState();
     });
@@ -734,7 +526,7 @@ function playRadio() {
     }
 }
 
-async function playSurah(id, url) {
+function playSurah(id, url) {
     initAudioBoost(); 
     if (playingSurahId === id && playingSheikhId === currentSheikhId && playingEditionId === currentEdition) { togglePlayPause(); return; }
     
@@ -742,30 +534,15 @@ async function playSurah(id, url) {
     playingSurahId = id; playingSheikhId = currentSheikhId; playingEditionId = currentEdition;
     
     isBuffering = true; 
-    audioInstance.pause();
     
-    // دعم الاستماع الفعلي بدون إنترنت
-    try {
-        if ('caches' in window) {
-            const cache = await caches.open('egy-quran-audio');
-            const cachedRes = await cache.match(url);
-            if (cachedRes) {
-                const blob = await cachedRes.blob();
-                audioInstance.src = URL.createObjectURL(blob);
-            } else {
-                audioInstance.src = url; 
-            }
-        } else {
-            audioInstance.src = url;
-        }
-    } catch(e) {
-        audioInstance.src = url;
-    }
-
+    // إصلاح مشكلة المتصفح: تفريغ المسار القديم وإجباره على التحديث
+    audioInstance.pause();
+    audioInstance.src = url; 
     audioInstance.loop = (playbackMode === 'loop');
     audioInstance.load();
     
     audioInstance.play().catch(e => {
+        console.log("Audio Play Error:", e);
         isBuffering = false;
         syncUIWithAudioState();
     });
@@ -797,13 +574,15 @@ function togglePlayPause() {
         isBuffering = true;
         syncUIWithAudioState();
         
-        if (playingSurahId === 'radio' && !audioInstance.src.includes('blob')) {
+        // إعادة تحميل البث المباشر
+        if (playingSurahId === 'radio') {
             audioInstance.pause();
             audioInstance.src = radioUrl;
             audioInstance.load();
         }
         
         audioInstance.play().catch(e => {
+            console.log("Audio Play Error:", e);
             isBuffering = false;
             syncUIWithAudioState();
         });
@@ -811,7 +590,6 @@ function togglePlayPause() {
         audioInstance.pause(); 
     }
 }
-
 function playNext() { 
     if(playingSurahId === 'radio') return;
     const idx = activeSurahsData.findIndex(s => s.id === playingSurahId); if (idx < activeSurahsData.length - 1) { const next = activeSurahsData[idx + 1]; playSurah(next.id, next.url); } 
@@ -853,18 +631,11 @@ window.addEventListener('offline', () => {
 });
 
 audioInstance.onended = () => {
-    if (sleepTimerSurahEnd) {
-        sleepTimerSurahEnd = false;
-        const btn = document.getElementById('btn-sleep-timer');
-        if(btn) btn.classList.remove('active-feature');
-        return; 
-    }
     if (playbackMode === 'autonext' && playingSurahId !== 'radio') {
         playNext();
     }
 };
 
-let lastPositionUpdateTime = 0;
 audioInstance.ontimeupdate = () => {
     if (playingSurahId === 'radio') {
         document.getElementById('progress-bar-fill').style.width = '100%';
@@ -885,19 +656,6 @@ audioInstance.ontimeupdate = () => {
                     preloadedSurahId = nextSurah.id;
                 }
             }
-        }
-        
-        // تحديث شريط تقدم الصوت في شاشة القفل كل ثانية
-        const now = Date.now();
-        if (now - lastPositionUpdateTime > 1000 && 'mediaSession' in navigator && navigator.mediaSession.setPositionState && audioInstance.duration !== Infinity) {
-            try {
-                navigator.mediaSession.setPositionState({
-                    duration: audioInstance.duration,
-                    playbackRate: audioInstance.playbackRate,
-                    position: audioInstance.currentTime
-                });
-                lastPositionUpdateTime = now;
-            } catch(e) {}
         }
     }
 };
@@ -925,106 +683,43 @@ const seek = (e) => {
     return pct; 
 };
 
-const onDragMove = (e) => { if (isDragging) seek(e); };
-const onDragEnd = (e) => { 
-    if (isDragging) { 
-        isDragging = false; 
-        window.removeEventListener('mousemove', onDragMove);
-        window.removeEventListener('mouseup', onDragEnd);
-        window.removeEventListener('touchmove', onDragMove);
-        window.removeEventListener('touchend', onDragEnd);
-        if(audioInstance.duration && audioInstance.duration !== Infinity) {
-            audioInstance.currentTime = currentSeekPct * audioInstance.duration;
-        }
-    } 
-};
+progressContainer.addEventListener('mousedown', (e) => { if(playingSurahId==='radio') return; isDragging = true; seek(e); }); 
+window.addEventListener('mousemove', (e) => { if (isDragging) seek(e); }); 
+window.addEventListener('mouseup', (e) => { if (isDragging) { isDragging = false; if(audioInstance.duration && audioInstance.duration !== Infinity) audioInstance.currentTime = currentSeekPct * audioInstance.duration; } });
 
-if(progressContainer) {
-    progressContainer.addEventListener('mousedown', (e) => { 
-        if(playingSurahId==='radio') return; 
-        isDragging = true; 
-        seek(e); 
-        window.addEventListener('mousemove', onDragMove);
-        window.addEventListener('mouseup', onDragEnd);
-    });
+progressContainer.addEventListener('touchstart', (e) => { if(playingSurahId==='radio') return; isDragging = true; seek(e); }, {passive: false}); 
+window.addEventListener('touchmove', (e) => { if (isDragging) seek(e); }, {passive: false}); 
+window.addEventListener('touchend', (e) => { if (isDragging) { isDragging = false; if (e.changedTouches) seek(e); if(audioInstance.duration && audioInstance.duration !== Infinity) audioInstance.currentTime = currentSeekPct * audioInstance.duration; } }); 
 
-    progressContainer.addEventListener('touchstart', (e) => { 
-        if(playingSurahId==='radio') return; 
-        isDragging = true; 
-        seek(e); 
-        window.addEventListener('touchmove', onDragMove, {passive: false});
-        window.addEventListener('touchend', onDragEnd, {passive: false});
-    }, {passive: false}); 
-
-    progressContainer.addEventListener('click', (e) => { 
-        if(playingSurahId !== 'radio' && audioInstance.duration && audioInstance.duration !== Infinity) {
-            audioInstance.currentTime = seek(e) * audioInstance.duration;
-        }
-    });
-}
+progressContainer.addEventListener('click', (e) => { if(playingSurahId !== 'radio' && audioInstance.duration && audioInstance.duration !== Infinity) audioInstance.currentTime = seek(e) * audioInstance.duration; });
 
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     setTimeout(() => {
-        const banner = document.getElementById('install-banner');
-        if(banner) banner.classList.add('show');
+        document.getElementById('install-banner').classList.add('show');
     }, 2000); 
 });
 
-const installBtn = document.getElementById('install-action-btn');
-if(installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            document.getElementById('install-banner').classList.remove('show');
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-        }
-    });
-}
+document.getElementById('install-action-btn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        document.getElementById('install-banner').classList.remove('show');
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+    }
+});
 
 window.addEventListener('appinstalled', () => {
-    const banner = document.getElementById('install-banner');
-    if(banner) banner.classList.remove('show');
+    document.getElementById('install-banner').classList.remove('show');
     showToast(currentLang === 'ar' ? 'تم تثبيت التطبيق بنجاح!' : 'App installed successfully!');
 });
 
-// PWA Update Management
-let newWorker;
-if ('serviceWorker' in navigator) { 
-    window.addEventListener('load', () => { 
-        navigator.serviceWorker.register('sw.js').then(reg => {
-            reg.addEventListener('updatefound', () => {
-                newWorker = reg.installing;
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        const updateToast = document.getElementById('update-toast');
-                        if(updateToast) updateToast.classList.add('show');
-                    }
-                });
-            });
-        }).catch(err => console.log('SW failed')); 
-    }); 
-    
-    let refreshing;
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (refreshing) return;
-        refreshing = true;
-        window.location.reload();
-    });
-}
-
-function applyUpdate() {
-    if (newWorker) {
-        newWorker.postMessage({ action: 'skipWaiting' });
-    }
-}
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed')); }); }
 
 (async () => {
-    const themeBtn = document.getElementById('theme-toggle-btn');
-    if(themeBtn) themeBtn.innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
+    document.getElementById('theme-toggle-btn').innerHTML = currentTheme === 'dark' ? icons.moon : icons.sun;
     setPlaybackMode('autonext'); 
     
     let targetSheikh = 'husary'; 
@@ -1063,10 +758,8 @@ function applyUpdate() {
 
     if (!localStorage.getItem('radioDiscovered')) {
         setTimeout(() => {
-            const rTooltip = document.getElementById('radio-tooltip');
-            const rBadge = document.getElementById('radio-badge');
-            if(rTooltip) rTooltip.classList.add('show');
-            if(rBadge) rBadge.classList.add('show');
+            document.getElementById('radio-tooltip').classList.add('show');
+            document.getElementById('radio-badge').classList.add('show');
         }, 2500); 
     }
 
@@ -1090,15 +783,11 @@ function applyUpdate() {
             if(sData && audioInstance.src === "") {
                 const sName = getSurahName(sData.id, sData.name);
                 const promptText = currentLang === 'ar' ? `هل تود إكمال الاستماع إلى سورة ${sName}؟` : `Resume listening to Surah ${sName}?`;
-                const rText = document.getElementById('resume-text');
-                const rBanner = document.getElementById('resume-banner');
-                if(rText && rBanner) {
-                    rText.innerText = promptText;
-                    rBanner.classList.add('show');
-                    
-                    window.resumeData = { id: sData.id, url: sData.url };
-                    setTimeout(() => closeResumeBanner(), 15000);
-                }
+                document.getElementById('resume-text').innerText = promptText;
+                document.getElementById('resume-banner').classList.add('show');
+                
+                window.resumeData = { id: sData.id, url: sData.url };
+                setTimeout(() => closeResumeBanner(), 15000);
             }
         }
     }
